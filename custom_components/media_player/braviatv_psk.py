@@ -45,7 +45,7 @@ PLAY_MEDIA_OPTIONS = [
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
     'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display',
     'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Select',
-    'EPG', 'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
+    'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
     'Hdmi1', 'Hdmi2', 'Hdmi3', 'Hdmi4'
 ]
 
