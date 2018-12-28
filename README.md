@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-0.2.3-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2018.svg?style=for-the-badge)](#) [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-0.2.4-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2018.svg?style=for-the-badge)](#) [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 
 # custom_component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
