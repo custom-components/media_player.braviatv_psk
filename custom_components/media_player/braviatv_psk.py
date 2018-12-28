@@ -45,7 +45,8 @@ PLAY_MEDIA_OPTIONS = [
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
     'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display',
     'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Select',
-    'Info', 'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop'
+    'Info', 'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
+    'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4'
 ]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
