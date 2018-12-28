@@ -16,7 +16,7 @@ from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.2.3'
+__version__ = '0.2.4'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
 
@@ -45,8 +45,8 @@ PLAY_MEDIA_OPTIONS = [
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
     'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display',
     'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Select',
-    'Info', 'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
-    'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4'
+    'EPG', 'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
+    'Hdmi1', 'Hdmi2', 'Hdmi3', 'Hdmi4'
 ]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
