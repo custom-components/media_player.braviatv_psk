@@ -43,10 +43,9 @@ TV_NO_INFO = 'No info (resumed after pause or app opened)'
 PLAY_MEDIA_OPTIONS = [
     'Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6', 'Num7', 'Num8', 'Num9',
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
-    'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display',
-    'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Select',
-    'Back', 'Teletext', 'TvPause', 'Play', 'Pause', 'Stop',
-    'Hdmi1', 'Hdmi2', 'Hdmi3', 'Hdmi4'
+    'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display', 'Tv',
+    'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Teletext', 'Input',
+    'TvPause', 'Play', 'Pause', 'Stop', 'HDMI1', 'HDMI2', 'HDMI3', 'HDMI4'
 ]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
