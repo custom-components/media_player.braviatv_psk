@@ -8,15 +8,24 @@ import logging
 import voluptuous as vol
 
 from homeassistant.components.media_player import (
+    MediaPlayerDevice, PLATFORM_SCHEMA)
+try:
+    from homeassistant.components.media_player.const import (
+        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK, SUPPORT_TURN_ON,
+        SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_STEP, SUPPORT_PLAY,
+        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_SET, SUPPORT_SELECT_SOURCE,
+        MEDIA_TYPE_TVSHOW, SUPPORT_STOP)
+except ImportError:
+    from homeassistant.components.media_player import (
     SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK, SUPPORT_TURN_ON,
     SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_STEP, SUPPORT_PLAY,
     SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_SET, SUPPORT_SELECT_SOURCE,
-    MediaPlayerDevice, PLATFORM_SCHEMA, MEDIA_TYPE_TVSHOW, SUPPORT_STOP)
+    MEDIA_TYPE_TVSHOW, SUPPORT_STOP)
 from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.2.4'
+__version__ = '0.2.5'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
 
@@ -45,7 +54,7 @@ PLAY_MEDIA_OPTIONS = [
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
     'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display', 'Tv',
     'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Teletext', 'Input',
-    'TvPause', 'Play', 'Pause', 'Stop', 'Hdmi1', 'Hdmi2', 'Hdmi3', 'Hdmi4'
+    'TvPause', 'Play', 'Pause', 'Stop', 'HDMI 1', 'HDMI 2', 'HDMI 3', 'HDMI 4'
 ]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
