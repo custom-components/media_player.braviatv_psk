@@ -3,9 +3,9 @@
 # custom_component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
 
-To get started put `/custom_components/media_player/braviatv_psk.py` here:
+To get started put `/custom_components/braviatv_psk/media_player.py` here:
 
-`<config directory>/custom_components/media_player/braviatv_psk.py`  
+`<config directory>/custom_components/braviatv_psk/media_player.py`  
   
 **Example configuration.yaml:**
 
