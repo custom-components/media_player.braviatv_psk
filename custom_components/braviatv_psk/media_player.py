@@ -2,7 +2,7 @@
 Support for interface with a Sony Bravia TV.
 
 For more details about this platform, please refer to the documentation at
-https://home-assistant.io/components/media_player.braviatv_psk/
+https://github.com/custom-components/braviatv_psk.media_player
 """
 import logging
 import voluptuous as vol
