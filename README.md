@@ -16,6 +16,7 @@ media_player:
     psk: sony
     mac: AA:BB:CC:DD:EE:FF
     amp: True
+    android: True
     sourcefilter:
       - ' HD'
       - HDMI
