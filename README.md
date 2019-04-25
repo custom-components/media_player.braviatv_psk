@@ -6,7 +6,9 @@ A platform which allows you to interact with the Sony Bravia TV using a Pre-Shar
 To get started put `/custom_components/braviatv_psk/media_player.py` here:
 
 `<config directory>/custom_components/braviatv_psk/media_player.py`  
-  
+
+Starting with Home Assistant 0.92 you also need to copy the file `/custom_components/braviatv_psk/__init__.py` to `<config directory>/custom_components/braviatv_psk/__init__.py`
+
 **Example configuration.yaml:**
 
 ```yaml
