@@ -25,7 +25,7 @@ from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
 
@@ -34,7 +34,7 @@ _LOGGER = logging.getLogger(__name__)
 SUPPORT_BRAVIA = SUPPORT_PAUSE | SUPPORT_VOLUME_STEP | \
                  SUPPORT_VOLUME_MUTE | SUPPORT_VOLUME_SET | \
                  SUPPORT_PREVIOUS_TRACK | SUPPORT_NEXT_TRACK | \
-                 SUPPORT_TURN_ON | SUPPORT_TURN_OFF | \
+                 SUPPORT_TURN_ON | SUPPORT_TURN_OFF | SUPPORT_PLAY_MEDIA | \
                  SUPPORT_SELECT_SOURCE | SUPPORT_PLAY | SUPPORT_STOP
 
 DEFAULT_NAME = 'Sony Bravia TV'
@@ -54,7 +54,8 @@ PLAY_MEDIA_OPTIONS = [
     'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
     'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display', 'Tv',
     'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Teletext', 'Input',
-    'TvPause', 'Play', 'Pause', 'Stop', 'HDMI 1', 'HDMI 2', 'HDMI 3', 'HDMI 4'
+    'TvPause', 'Play', 'Pause', 'Stop', 'HDMI 1', 'HDMI 2', 'HDMI 3', 'HDMI 4',
+    'SleepTimer', 'GooglePlay'
 ]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
