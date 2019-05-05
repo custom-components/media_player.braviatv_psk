@@ -1,7 +1,9 @@
 [![Version](https://img.shields.io/badge/version-0.2.6-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#) [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 
-# custom_component for Sony Bravia TV using Pre-Shared Key (PSK)
+# Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
+
+See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33) post on the HA forum for more info.
 
 To get started put `/custom_components/braviatv_psk/media_player.py` here:
 
