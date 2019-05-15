@@ -25,7 +25,7 @@ from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.2.7'
+__version__ = '0.2.8'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
 
