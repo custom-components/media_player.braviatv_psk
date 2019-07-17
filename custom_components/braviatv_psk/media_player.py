@@ -11,33 +11,34 @@ from homeassistant.components.media_player import (
     MediaPlayerDevice, PLATFORM_SCHEMA)
 try:
     from homeassistant.components.media_player.const import (
-        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK, SUPPORT_TURN_ON,
-        SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_STEP, SUPPORT_PLAY,
-        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_SET, SUPPORT_SELECT_SOURCE,
-        MEDIA_TYPE_TVSHOW, SUPPORT_STOP)
+        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
+        SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
+        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
+        SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
 except ImportError:
     from homeassistant.components.media_player import (
-    SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK, SUPPORT_TURN_ON,
-    SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_STEP, SUPPORT_PLAY,
-    SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_SET, SUPPORT_SELECT_SOURCE,
-    MEDIA_TYPE_TVSHOW, SUPPORT_STOP)
+        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
+        SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
+        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
+        SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
 from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.2.8'
+__version__ = '0.3.0'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_BRAVIA = SUPPORT_PAUSE | SUPPORT_VOLUME_STEP | \
-                 SUPPORT_VOLUME_MUTE | SUPPORT_VOLUME_SET | \
-                 SUPPORT_PREVIOUS_TRACK | SUPPORT_NEXT_TRACK | \
-                 SUPPORT_TURN_ON | SUPPORT_TURN_OFF | SUPPORT_PLAY_MEDIA | \
-                 SUPPORT_SELECT_SOURCE | SUPPORT_PLAY | SUPPORT_STOP
+SUPPORT_BRAVIA = \
+    SUPPORT_PAUSE | SUPPORT_VOLUME_STEP | SUPPORT_VOLUME_MUTE | \
+    SUPPORT_VOLUME_SET | SUPPORT_PREVIOUS_TRACK | SUPPORT_NEXT_TRACK | \
+    SUPPORT_TURN_ON | SUPPORT_TURN_OFF | SUPPORT_PLAY_MEDIA | \
+    SUPPORT_SELECT_SOURCE | SUPPORT_PLAY | SUPPORT_STOP
 
 DEFAULT_NAME = 'Sony Bravia TV'
+DEVICE_CLASS_TV = 'tv'
 
 # Config file
 CONF_PSK = 'psk'
@@ -121,6 +122,7 @@ class BraviaTVDevice(MediaPlayerDevice):
         self._volume = None
         self._start_time = None
         self._end_time = None
+        self._device_class = DEVICE_CLASS_TV
         
         if mac:
             self._unique_id = '{}-{}'.format(mac, name)
@@ -300,6 +302,11 @@ class BraviaTVDevice(MediaPlayerDevice):
     def media_content_id(self):
         """Content ID of current playing media."""
         return self._channel_name
+
+    @property
+    def device_class(self):
+        """Return the device class of the media player."""
+        return self._device_class
 
     def set_volume_level(self, volume):
         """Set volume level, range 0..1."""
