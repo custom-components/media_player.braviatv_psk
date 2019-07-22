@@ -25,9 +25,9 @@ from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
-REQUIREMENTS = ['pySonyBraviaPSK==0.1.7']
+REQUIREMENTS = ['pySonyBraviaPSK==0.1.8']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -171,7 +171,7 @@ class BraviaTVDevice(MediaPlayerDevice):
                     self._state = STATE_OFF
 
         except Exception as exception_instance:  # pylint: disable=broad-except
-            _LOGGER.error("No data received from TV. Error message: %s",
+            _LOGGER.debug("No data received from TV. Error message: %s",
                           exception_instance)
             self._state = STATE_OFF
 
