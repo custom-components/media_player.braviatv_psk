@@ -3,14 +3,27 @@
 # Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
 
+## Homekit TV supported
+The media player will show up as Television accessories on devices running iOS 12.2 or later
+
+## HA forum
 See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33) post on the HA forum for more info.
 
-To get started put `/custom_components/braviatv_psk/media_player.py` here:
+## Screenshots
+_Component used with Mini Media Player_
 
-`<config directory>/custom_components/braviatv_psk/media_player.py`  
+![Component used with Mini Media Player](screenshots/bravia_1.jpg)
 
-Starting with Home Assistant 0.92 you also need to copy the file `/custom_components/braviatv_psk/__init__.py` to `<config directory>/custom_components/braviatv_psk/__init__.py` and `/custom_components/braviatv_psk/manifest.json` to `<config directory>/custom_components/braviatv_psk/manifest.json`
+_Component used with standard Media Player_
 
+![Component used with standard Media Player](screenshots/bravia_2.jpg)
+
+## Installation
+You can use HACS or install the component manually:
+
+To get started put the files from `/custom_components/braviatv_psk/` in your folder `<config directory>/custom_components/braviatv_psk/` 
+
+## Configuration
 **Example configuration.yaml:**
 
 ```yaml
