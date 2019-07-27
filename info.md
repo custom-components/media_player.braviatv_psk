@@ -62,7 +62,7 @@ key | description
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
-![Component entity with attributes](screenshots/bravia_3.jpg)
+![Component entity with attributes](screenshots/bravia_3.png)
 
 ***
 Due to how `custom_componentes` are loaded, it is normal to see a `ModuleNotFoundError` error on first boot after adding this, to resolve it, restart Home-Assistant.
