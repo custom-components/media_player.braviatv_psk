@@ -6,7 +6,11 @@
 ### This is a Beta version!
 {% endif %}
 
-[![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#) [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+[![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#)
+[![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+[![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
 
 # Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
@@ -14,17 +18,14 @@ A platform which allows you to interact with the Sony Bravia TV using a Pre-Shar
 ## Homekit TV supported
 The media player will show up as Television accessories on devices running iOS 12.2 or later
 
-## HA forum
-See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33) post on the HA forum for more info.
-
 ## Screenshots
 _Component used with Mini Media Player_
 
-![Component used with Mini Media Player](screenshots/bravia_1.png)
+![Component used with Mini Media Player](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png)
 
 _Component used with standard Media Player_
 
-![Component used with standard Media Player](screenshots/bravia_2.png)
+![Component used with standard Media Player](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png)
 
 ## Configuration
 **Example configuration.yaml:**
@@ -62,7 +63,7 @@ key | description
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
-![Component entity with attributes](screenshots/bravia_3.png)
+![Component entity with attributes](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png)
 
 ***
 Due to how `custom_componentes` are loaded, it is normal to see a `ModuleNotFoundError` error on first boot after adding this, to resolve it, restart Home-Assistant.
