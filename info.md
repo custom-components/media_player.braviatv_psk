@@ -1,9 +1,15 @@
 {% if installed %}
-### Thanks for using this custom component.
+**Thanks for using this custom component.**
+
+<br>
+
 {% endif %}
 
 {% if prerelease %}
-### This is a Beta version!
+**This is a Beta version!**
+
+<br>
+
 {% endif %}
 
 [![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#)
@@ -21,11 +27,15 @@ The media player will show up as Television accessories on devices running iOS 1
 ## Screenshots
 _Component used with Mini Media Player_
 
-![Component used with Mini Media Player](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png)
+<kbd>
+  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png">
+</kbd>
 
 _Component used with standard Media Player_
 
-![Component used with standard Media Player](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png)
+<kbd>
+  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png">
+</kbd>
 
 ## Configuration
 **Example configuration.yaml:**
@@ -63,7 +73,11 @@ key | description
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
-![Component entity with attributes](https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png)
+<kbd>
+  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png">
+</kbd>
+
+<br>
 
 ***
 Due to how `custom_componentes` are loaded, it is normal to see a `ModuleNotFoundError` error on first boot after adding this, to resolve it, restart Home-Assistant.
