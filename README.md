@@ -12,11 +12,11 @@ See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-p
 ## Screenshots
 _Component used with Mini Media Player_
 
-![Component used with Mini Media Player](screenshots/bravia_1.jpg)
+![Component used with Mini Media Player](screenshots/bravia_1.png)
 
 _Component used with standard Media Player_
 
-![Component used with standard Media Player](screenshots/bravia_2.jpg)
+![Component used with standard Media Player](screenshots/bravia_2.png)
 
 ## Installation
 You can use HACS or install the component manually:
