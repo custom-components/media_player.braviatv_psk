@@ -1,13 +1,14 @@
-[![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#) [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+[![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#)
+[![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+[![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
 
 # Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
 
 ## Homekit TV supported
 The media player will show up as Television accessories on devices running iOS 12.2 or later
-
-## HA forum
-See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33) post on the HA forum for more info.
 
 ## Screenshots
 _Component used with Mini Media Player_
