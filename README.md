@@ -22,7 +22,7 @@ _Component used with standard Media Player_
 ## Installation
 You can use HACS or install the component manually:
 
-To get started put the files from `/custom_components/braviatv_psk/` in your folder `<config directory>/custom_components/braviatv_psk/` 
+To get started put the files from `/custom_components/braviatv_psk/` in your folder `<config directory>/custom_components/braviatv_psk/`
 
 ## Configuration
 **Example configuration.yaml:**
@@ -38,11 +38,12 @@ media_player:
     sourcefilter:
       - ' HD'
       - HDMI
+    time_format: '12H'
     name: MyBraviaTV
 ```
 
 **Configuration variables:**  
-  
+
 key | description  
 :--- | :---  
 **platform (Required)** | The platform name.
@@ -52,6 +53,7 @@ key | description
 **amp (Optional)** | Boolean, defaults to False. Set this to True if you have an amplifier attached to the TV and not use the internal TV speakers. Then the volume slider will not be shown as this doesn’t work for the amplifier. Mute and volume up and down buttons are there and working with an amplifier.
 **android (Optional)** | Boolean, defaults to False. Set this to True when you have an Android TV as these TV’s don’t respond to WakeOn LAN commands, so another method of turning on the TV can be used.
 **sourcefilter (Optional)** | List of text that is used to filter the source list, eg. ’ HD’ (with quotes) will only show TV channels in the source list which contain ‘HD’, eg. ‘NPO 3 HD’ (in my config this will only show HD channels)
+**time_format (Optional)** | Time format to use for program information. Valid options are `12H` or `24H`, default is `24H`.
 
 **Installation instructions TV**
 1. Enable remote start on your TV: [Settings] => [Network] => [Home Network Setup] => [Remote Start] => [On]
@@ -59,7 +61,7 @@ key | description
 3. Set pre-shared key on your TV: [Settings] => [Network] => [Home Network Setup] => [IP Control] => [Pre-Shared Key] => sony
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
-  
+
 ***
 Due to how `custom_componentes` are loaded, it is normal to see a `ModuleNotFoundError` error on first boot after adding this, to resolve it, restart Home-Assistant.
 
