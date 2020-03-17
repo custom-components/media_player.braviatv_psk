@@ -46,7 +46,7 @@ media_player:
 
 key | description  
 :--- | :---  
-**platform (Required)** | The platform name.
+**platform (Required)** | The platform name `braviatv_psk`.
 **host (Required)** | The IP of the Sony Bravia TV, eg. 192.168.1.101.
 **psk (Required)** | The Pre-Shared Key of the Sony Bravia TV, eg. sony (see below for instructions how to configure this on the TV). Place the psk between quotes if you use digits and those start with one or more zero's, e.g. '0044'.
 **mac  (Optional)** | The MAC address of the Sony Bravia TV (see below for instructions how to get this from the TV). This is used to turn on the TV using WakeOn LAN and is only needed if the TV is non-Android.
@@ -54,6 +54,7 @@ key | description
 **android (Optional)** | Boolean, defaults to False. Set this to True when you have an Android TV as these TV’s don’t respond to WakeOn LAN commands, so another method of turning on the TV can be used.
 **sourcefilter (Optional)** | List of text that is used to filter the source list, eg. ’ HD’ (with quotes) will only show TV channels in the source list which contain ‘HD’, eg. ‘NPO 3 HD’ (in my config this will only show HD channels)
 **time_format (Optional)** | Time format to use for program information. Valid options are `12H` or `24H`, default is `24H`.
+**name (Optional)** | The name the TV will have in Home Assistant, default is `Sony Bravia TV`.
 
 **Installation instructions TV**
 1. Enable remote start on your TV: [Settings] => [Network] => [Home Network Setup] => [Remote Start] => [On]
