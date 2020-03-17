@@ -41,10 +41,13 @@ DEFAULT_NAME = 'Sony Bravia TV'
 DEVICE_CLASS_TV = 'tv'
 
 # Config file
+CONF_12H = '12H'
+CONF_24H = '24H'
 CONF_PSK = 'psk'
 CONF_AMP = 'amp'
 CONF_ANDROID = 'android'
 CONF_SOURCE_FILTER = 'sourcefilter'
+CONF_TIME_FORMAT = 'time_format'
 
 # Some additional info to show specific for Sony Bravia TV
 TV_WAIT = 'TV started, waiting for program info'
@@ -67,9 +70,26 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_AMP, default=False): cv.boolean,
     vol.Optional(CONF_ANDROID, default=False): cv.boolean,
     vol.Optional(CONF_SOURCE_FILTER, default=[]): vol.All(
-        cv.ensure_list, [cv.string])})
+        cv.ensure_list, [cv.string]),
+    vol.Optional(CONF_TIME_FORMAT, default=CONF_24H): vol.In(
+        [CONF_12H, CONF_24H]),
+})
 
 # pylint: disable=unused-argument
+
+
+def convert_time_format(time_format, time_raw):
+    if time_format == CONF_12H:
+        hours, minutes = time_raw.split(':')
+        hours, minutes = int(hours), int(minutes)
+        setting = 'AM'
+        if hours > 12:
+            setting = 'PM'
+            hours -= 12
+        elif hours == 0:
+            hours = 12
+        return '{}:{:02d} {}'.format(hours, minutes, setting)
+    return time_raw
 
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
@@ -81,6 +101,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     amp = config.get(CONF_AMP)
     android = config.get(CONF_ANDROID)
     source_filter = config.get(CONF_SOURCE_FILTER)
+    time_format = config.get(CONF_TIME_FORMAT)
 
     if host is None or psk is None:
         _LOGGER.error(
@@ -88,13 +109,13 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         return
 
     add_devices(
-        [BraviaTVDevice(host, psk, mac, name, amp, android, source_filter)])
+        [BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format)])
 
 
 class BraviaTVDevice(MediaPlayerDevice):
     """Representation of a Sony Bravia TV."""
 
-    def __init__(self, host, psk, mac, name, amp, android, source_filter):
+    def __init__(self, host, psk, mac, name, amp, android, source_filter, time_format):
         """Initialize the Sony Bravia device."""
         _LOGGER.info("Setting up Sony Bravia TV")
         from braviapsk import sony_bravia_psk
@@ -123,7 +144,8 @@ class BraviaTVDevice(MediaPlayerDevice):
         self._start_time = None
         self._end_time = None
         self._device_class = DEVICE_CLASS_TV
-        
+        self._time_format = time_format
+
         if mac:
             self._unique_id = '{}-{}'.format(mac, name)
         else:
@@ -290,7 +312,10 @@ class BraviaTVDevice(MediaPlayerDevice):
         if self._program_name is not None:
             if self._start_time is not None and self._end_time is not None:
                 return_value = '{0} [{1} - {2}]'.format(
-                    self._program_name, self._start_time, self._end_time)
+                    self._program_name,
+                    convert_time_format(self._time_format, self._start_time),
+                    convert_time_format(self._time_format, self._end_time),
+                )
             else:
                 return_value = self._program_name
         else:
