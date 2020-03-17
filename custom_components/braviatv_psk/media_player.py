@@ -335,10 +335,10 @@ class BraviaTVDevice(MediaPlayerDevice):
         """
         if self._android:
             self._braviarc.turn_off_command()
-            self._state = STATE_OFF
         else:
             self._braviarc.turn_off()
-            self._state = STATE_OFF
+
+        self._state = STATE_OFF
 
     def volume_up(self):
         """Volume up the media player."""
