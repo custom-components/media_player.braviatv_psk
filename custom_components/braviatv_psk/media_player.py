@@ -354,8 +354,15 @@ class BraviaTVDevice(MediaPlayerDevice):
         self._program_name = TV_WAIT
 
     def turn_off(self):
-        """Turn off media player."""
-        self._braviarc.turn_off()
+        """Turn the media player off.
+
+        Use a different command for Android since IRCC is not working reliable.
+        """
+        if self._android:
+            self._braviarc.turn_off_command()
+        else:
+            self._braviarc.turn_off()
+
         self._state = STATE_OFF
 
     def volume_up(self):
