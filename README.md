@@ -38,7 +38,7 @@ media_player:
     sourcefilter:
       - ' HD'
       - HDMI
-    time_format: '12H'
+    time_format: 12H
     name: MyBraviaTV
 ```
 
