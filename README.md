@@ -1,4 +1,3 @@
-[![Version](https://img.shields.io/badge/version-0.3.1-green.svg?style=for-the-badge)](#)
 [![mantained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
