@@ -12,7 +12,7 @@
 
 {% endif %}
 
-[![mantained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
+[![maintained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
@@ -26,15 +26,11 @@ The media player will show up as Television accessories on devices running iOS 1
 ## Screenshots
 _Component used with Mini Media Player_
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png">
 
 _Component used with standard Media Player_
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png">
 
 ## Configuration
 **Example configuration.yaml:**
@@ -75,9 +71,7 @@ key | description
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png">
 
 <br>
 
