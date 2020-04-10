@@ -132,6 +132,7 @@ class BraviaTVDevice(MediaPlayerDevice):
         self._channel_number = None
         self._source = None
         self._source_list = []
+        self._label_list = []
         self._content_mapping = {}
         self._duration = None
         self._content_uri = None
@@ -185,12 +186,14 @@ class BraviaTVDevice(MediaPlayerDevice):
                             self._start_date_time, self._duration)
                         self._start_time = time_info.get('start_time')
                         self._end_time = time_info.get('end_time')
+            elif self._program_name == TV_WAIT:
+                # TV is starting up, takes some time before it responds
+                _LOGGER.info("TV is starting, no info available yet")
+            elif power_status == "standby":
+                self._refresh_channels()
+                self._state = STATE_OFF
             else:
-                if self._program_name == TV_WAIT:
-                    # TV is starting up, takes some time before it responds
-                    _LOGGER.info("TV is starting, no info available yet")
-                else:
-                    self._state = STATE_OFF
+                self._state = STATE_OFF
 
         except Exception as exception_instance:  # pylint: disable=broad-except
             _LOGGER.debug("No data received from TV. Error message: %s",
@@ -233,6 +236,15 @@ class BraviaTVDevice(MediaPlayerDevice):
                 for key in filtered_dict:
                     self._source_list.append(key)
 
+        if not self._label_list:
+            self._label_list = self._braviarc.get_current_external_input_status()
+            if self._label_list:
+                for key in self._source_list:
+                    label = self._convert_title_to_label(key)
+                    if label != key:
+                        self._source_list.insert(self._source_list.index(key), label)
+                        self._source_list.remove(key)
+                    
     @property
     def name(self):
         """Return the name of the device."""
@@ -251,7 +263,7 @@ class BraviaTVDevice(MediaPlayerDevice):
     @property
     def source(self):
         """Return the current input source."""
-        return self._source
+        return self._convert_title_to_label(self._source)
 
     @property
     def source_list(self):
@@ -300,7 +312,7 @@ class BraviaTVDevice(MediaPlayerDevice):
                     self._channel_number.lstrip('0'), self._channel_name)
             else:
                 return_value = self._channel_name
-        return return_value
+        return self._convert_title_to_label(return_value)
 
     @property
     def media_series_title(self):
@@ -379,8 +391,9 @@ class BraviaTVDevice(MediaPlayerDevice):
 
     def select_source(self, source):
         """Set the input source."""
-        if source in self._content_mapping:
-            uri = self._content_mapping[source]
+        title = self._convert_label_to_title(source)
+        if title in self._content_mapping:
+            uri = self._content_mapping[title]
             self._braviarc.play_content(uri)
 
     def media_play_pause(self):
@@ -434,3 +447,17 @@ class BraviaTVDevice(MediaPlayerDevice):
             self._braviarc.send_command(media_id)
         else:
             _LOGGER.warning("Unsupported media_id: %s", media_id)
+
+    def _convert_title_to_label(self, title):
+        return_value = title
+        for item in self._label_list:
+            if item["title"] == title and item["label"] != "":
+                return_value = item["label"]
+        return return_value
+
+    def _convert_label_to_title(self, label):
+        return_value = label
+        for item in self._label_list:
+            if item["label"] == label and item["title"] != "":
+                return_value = item["title"]
+        return return_value
