@@ -53,6 +53,7 @@ key | description
 **android (Optional)** | Boolean, defaults to False. Set this to True when you have an Android TV as these TV’s don’t respond to WakeOn LAN commands, so another method of turning on the TV can be used.
 **sourcefilter (Optional)** | List of text that is used to filter the source list, eg. ’ HD’ (with quotes) will only show TV channels in the source list which contain ‘HD’, eg. ‘NPO 3 HD’ (in my config this will only show HD channels).
 **time_format (Optional)** | Time format to use for program information. Valid options are `12H` or `24H`, default is `24H`.
+**user_labels (Optional)** | Use the user defined labels from the TV (where configured), instead of default port labels.
 **name (Optional)** | The name the TV will have in Home Assistant, default is `Sony Bravia TV`.
 
 **Installation instructions TV**
