@@ -48,6 +48,7 @@ CONF_AMP = 'amp'
 CONF_ANDROID = 'android'
 CONF_SOURCE_FILTER = 'sourcefilter'
 CONF_TIME_FORMAT = 'time_format'
+CONF_USER_LABELS = "user_labels"
 
 # Some additional info to show specific for Sony Bravia TV
 TV_WAIT = 'TV started, waiting for program info'
@@ -73,6 +74,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         cv.ensure_list, [cv.string]),
     vol.Optional(CONF_TIME_FORMAT, default=CONF_24H): vol.In(
         [CONF_12H, CONF_24H]),
+    vol.Optional(CONF_USER_LABELS, default=False): cv.boolean,
 })
 
 # pylint: disable=unused-argument
@@ -102,6 +104,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     android = config.get(CONF_ANDROID)
     source_filter = config.get(CONF_SOURCE_FILTER)
     time_format = config.get(CONF_TIME_FORMAT)
+    user_labels = config.get(CONF_USER_LABELS)
 
     if host is None or psk is None:
         _LOGGER.error(
@@ -109,13 +112,13 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         return
 
     add_devices(
-        [BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format)])
+        [BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)])
 
 
 class BraviaTVDevice(MediaPlayerDevice):
     """Representation of a Sony Bravia TV."""
 
-    def __init__(self, host, psk, mac, name, amp, android, source_filter, time_format):
+    def __init__(self, host, psk, mac, name, amp, android, source_filter, time_format, user_labels):
         """Initialize the Sony Bravia device."""
         _LOGGER.info("Setting up Sony Bravia TV")
         from braviapsk import sony_bravia_psk
@@ -146,7 +149,8 @@ class BraviaTVDevice(MediaPlayerDevice):
         self._end_time = None
         self._device_class = DEVICE_CLASS_TV
         self._time_format = time_format
-
+        self._user_labels = user_labels
+        
         if mac:
             self._unique_id = '{}-{}'.format(mac, name)
         else:
@@ -450,14 +454,16 @@ class BraviaTVDevice(MediaPlayerDevice):
 
     def _convert_title_to_label(self, title):
         return_value = title
-        for item in self._label_list:
-            if item["title"] == title and item["label"] != "":
-                return_value = item["label"]
+        if self._user_labels:
+            for item in self._label_list:
+                if item["title"] == title and item["label"] != "":
+                    return_value = item["label"]
         return return_value
 
     def _convert_label_to_title(self, label):
         return_value = label
-        for item in self._label_list:
-            if item["label"] == label and item["title"] != "":
-                return_value = item["title"]
+        if self._user_labels:
+            for item in self._label_list:
+                if item["label"] == label and item["title"] != "":
+                    return_value = item["title"]
         return return_value
