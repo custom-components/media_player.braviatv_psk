@@ -12,8 +12,10 @@
 
 {% endif %}
 
-[![Version](https://img.shields.io/badge/version-0.3.0-green.svg?style=for-the-badge)](#)
-[![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+![Validate](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate/badge.svg)
+![Validate with hassfest](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20hassfest/badge.svg)
+
+[![maintained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
@@ -27,15 +29,11 @@ The media player will show up as Television accessories on devices running iOS 1
 ## Screenshots
 _Component used with Mini Media Player_
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_1.png">
 
 _Component used with standard Media Player_
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_2.png">
 
 ## Configuration
 **Example configuration.yaml:**
@@ -51,6 +49,7 @@ media_player:
     sourcefilter:
       - ' HD'
       - HDMI
+    time_format: 12H
     name: MyBraviaTV
 ```
 
@@ -58,13 +57,15 @@ media_player:
   
 key | description  
 :--- | :---  
-**platform (Required)** | The platform name.
+**platform (Required)** | The platform name `braviatv_psk`.
 **host (Required)** | The IP of the Sony Bravia TV, eg. 192.168.1.101.
 **psk (Required)** | The Pre-Shared Key of the Sony Bravia TV, eg. sony (see below for instructions how to configure this on the TV). Place the psk between quotes if you use digits and those start with one or more zero's, e.g. '0044'.
 **mac  (Optional)** | The MAC address of the Sony Bravia TV (see below for instructions how to get this from the TV). This is used to turn on the TV using WakeOn LAN and is only needed if the TV is non-Android.
 **amp (Optional)** | Boolean, defaults to False. Set this to True if you have an amplifier attached to the TV and not use the internal TV speakers. Then the volume slider will not be shown as this doesn’t work for the amplifier. Mute and volume up and down buttons are there and working with an amplifier.
 **android (Optional)** | Boolean, defaults to False. Set this to True when you have an Android TV as these TV’s don’t respond to WakeOn LAN commands, so another method of turning on the TV can be used.
-**sourcefilter (Optional)** | List of text that is used to filter the source list, eg. ’ HD’ (with quotes) will only show TV channels in the source list which contain ‘HD’, eg. ‘NPO 3 HD’ (in my config this will only show HD channels)
+**sourcefilter (Optional)** | List of text that is used to filter the source list, eg. ’ HD’ (with quotes) will only show TV channels in the source list which contain ‘HD’, eg. ‘NPO 3 HD’ (in my config this will only show HD channels).
+**time_format (Optional)** | Time format to use for program information. Valid options are `12H` or `24H`, default is `24H`.
+**name (Optional)** | The name the TV will have in Home Assistant, default is `Sony Bravia TV`.
 
 **Installation instructions TV**
 1. Enable remote start on your TV: [Settings] => [Network] => [Home Network Setup] => [Remote Start] => [On]
@@ -73,9 +74,7 @@ key | description
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
-<kbd>
-  <img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png">
-</kbd>
+<img src="https://github.com/custom-components/media_player.braviatv_psk/blob/master/screenshots/bravia_3.png">
 
 <br>
 
