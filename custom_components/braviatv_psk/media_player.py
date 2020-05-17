@@ -7,8 +7,10 @@ https://github.com/custom-components/media_player.braviatv_psk
 import logging
 import voluptuous as vol
 
-from homeassistant.components.media_player import (
-    MediaPlayerDevice, PLATFORM_SCHEMA)
+try:
+    from homeassistant.components.media_player import (MediaPlayerEntity, PLATFORM_SCHEMA)
+except ImportError:
+    from homeassistant.components.media_player import (MediaPlayerDevice as MediaPlayerEntity, PLATFORM_SCHEMA)
 try:
     from homeassistant.components.media_player.const import (
         DOMAIN, SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
@@ -25,7 +27,7 @@ from homeassistant.const import (
     ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 REQUIREMENTS = ['pySonyBraviaPSK==0.1.9']
 
@@ -129,11 +131,12 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         schema=BRAVIA_COMMAND_SCHEMA)
 
 
-class BraviaTVDevice(MediaPlayerDevice):
+class BraviaTVEntity(MediaPlayerEntity):
     """Representation of a Sony Bravia TV."""
 
     def __init__(self, host, psk, mac, name, amp, android, source_filter, time_format, user_labels):
         """Initialize the Sony Bravia device."""
+
         _LOGGER.info("Setting up Sony Bravia TV")
         from braviapsk import sony_bravia_psk
 
@@ -265,17 +268,17 @@ class BraviaTVDevice(MediaPlayerDevice):
                     
     @property
     def name(self):
-        """Return the name of the device."""
+        """Return the name of the entity."""
         return self._name
 
     @property
     def unique_id(self):
-        """Return the unique ID of the device."""
+        """Return the unique ID of the entity."""
         return self._unique_id
 
     @property
     def state(self):
-        """Return the state of the device."""
+        """Return the state of the entity."""
         return self._state
 
     @property
