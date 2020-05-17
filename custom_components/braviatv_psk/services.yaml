@@ -1,0 +1,9 @@
+bravia_command:
+  description: Send a custom command to Bravia TV.
+  fields:
+    entity_id:
+      description: Name(s) of entities to turn on.
+      example: 'media_player.bravia_tv'
+    command_id:
+      description: The ID of the command to send to TV.
+      example: 'ChannelUp'
