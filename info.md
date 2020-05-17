@@ -12,6 +12,9 @@
 
 {% endif %}
 
+![Validate](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate/badge.svg)
+![Validate with hassfest](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20hassfest/badge.svg)
+
 [![maintained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg?style=for-the-badge)](#)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)

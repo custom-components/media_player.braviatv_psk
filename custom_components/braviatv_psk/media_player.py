@@ -11,18 +11,18 @@ from homeassistant.components.media_player import (
     MediaPlayerDevice, PLATFORM_SCHEMA)
 try:
     from homeassistant.components.media_player.const import (
-        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
+        DOMAIN, SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
         SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
         SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
         SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
 except ImportError:
     from homeassistant.components.media_player import (
-        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
+        DOMAIN, SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
         SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
         SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
         SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
 from homeassistant.const import (
-    CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
+    ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
 __version__ = '0.3.2'
@@ -77,6 +77,15 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_USER_LABELS, default=False): cv.boolean,
 })
 
+SERVICE_BRAVIA_COMMAND = 'bravia_command'
+
+ATTR_COMMAND_ID = 'command_id'
+
+BRAVIA_COMMAND_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_ENTITY_ID): cv.entity_id,
+    vol.Required(ATTR_COMMAND_ID): cv.string,
+})
+
 # pylint: disable=unused-argument
 
 
@@ -111,8 +120,13 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
             "No TV IP address or Pre-Shared Key found in configuration file")
         return
 
-    add_devices(
-        [BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)])
+    device = BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)
+    add_devices([device])
+
+    hass.services.register(
+        DOMAIN, SERVICE_BRAVIA_COMMAND,
+        lambda service: device.send_command(service.data[ATTR_COMMAND_ID]),
+        schema=BRAVIA_COMMAND_SCHEMA)
 
 
 class BraviaTVDevice(MediaPlayerDevice):
@@ -451,6 +465,10 @@ class BraviaTVDevice(MediaPlayerDevice):
             self._braviarc.send_command(media_id)
         else:
             _LOGGER.warning("Unsupported media_id: %s", media_id)
+
+    def send_command(self, command_id):
+        """Send arbitrary command to TV."""
+        self._braviarc.send_command(command_id)
 
     def _convert_title_to_label(self, title):
         return_value = title
