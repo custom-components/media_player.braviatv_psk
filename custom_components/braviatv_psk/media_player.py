@@ -29,8 +29,6 @@ import homeassistant.helpers.config_validation as cv
 
 __version__ = '0.3.3'
 
-REQUIREMENTS = ['pySonyBraviaPSK==0.1.9']
-
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_BRAVIA = \
@@ -122,7 +120,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
             "No TV IP address or Pre-Shared Key found in configuration file")
         return
 
-    device = BraviaTVDevice(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)
+    device = BraviaTVEntity(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)
     add_devices([device])
 
     hass.services.register(
@@ -470,7 +468,7 @@ class BraviaTVEntity(MediaPlayerEntity):
             _LOGGER.warning("Unsupported media_id: %s", media_id)
 
     def send_command(self, command_id):
-        """Send arbitrary command to TV."""
+        """Send arbitrary command to TV via HA service."""
         self._braviarc.send_command(command_id)
 
     def _convert_title_to_label(self, title):
