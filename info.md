@@ -12,7 +12,7 @@
 
 {% endif %}
 
-![Validate](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate/badge.svg)
+![Validate with HACS](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20HACS/badge.svg)
 ![Validate with hassfest](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20hassfest/badge.svg)
 
 [![maintained](https://img.shields.io/maintenance/yes/2020.svg?style=for-the-badge)](#)
