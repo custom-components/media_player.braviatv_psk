@@ -6,13 +6,13 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
 
-# Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
+## Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
 
-## Homekit TV supported
+### Homekit TV supported
 The media player will show up as Television accessories on devices running iOS 12.2 or later
 
-## Screenshots
+### Screenshots
 _Component used with Mini Media Player_
 
 ![Component used with Mini Media Player](screenshots/bravia_1.png)
@@ -21,13 +21,13 @@ _Component used with standard Media Player_
 
 ![Component used with standard Media Player](screenshots/bravia_2.png)
 
-## Installation
+### Installation
 You can use HACS or install the component manually:
 
 To get started put the files from `/custom_components/braviatv_psk/` in your folder `<config directory>/custom_components/braviatv_psk/`
 
-## Configuration
-### Example configuration.yaml
+### Configuration
+#### Example configuration.yaml
 
 ```yaml
 media_player:
