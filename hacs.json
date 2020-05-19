@@ -1,5 +1,5 @@
 {
-  "name": "Sony Bravia TV with PSK",
+  "name": "Bravia TV PSK",
   "domains": ["media_player"],
   "iot_class": "Local Polling"
 }
