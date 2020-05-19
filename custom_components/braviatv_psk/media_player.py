@@ -27,7 +27,7 @@ from homeassistant.const import (
     ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 import homeassistant.helpers.config_validation as cv
 
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -208,9 +208,6 @@ class BraviaTVEntity(MediaPlayerEntity):
             elif self._program_name == TV_WAIT:
                 # TV is starting up, takes some time before it responds
                 _LOGGER.info("TV is starting, no info available yet")
-            elif power_status == "standby":
-                self._refresh_channels()
-                self._state = STATE_OFF
             else:
                 self._state = STATE_OFF
 
