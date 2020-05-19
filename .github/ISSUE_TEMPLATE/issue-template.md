@@ -38,6 +38,7 @@ media_player:
       - ' HD'
       - HDMI
     time_format: 12H
+    user_labels: True
     name: MyBraviaTV
 ````
 
