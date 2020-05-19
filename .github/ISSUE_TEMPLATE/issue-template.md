@@ -23,7 +23,7 @@ If applicable, add screenshots to help explain your problem.
 Please check the items below
 - [ ] The correct Pre-Shared Key (PSK) is used in the configuration
 - [ ] The correct static IP address of the TV is used in the configuration
-- [ ] The installation instructions for the TV from [here](https://github.com/custom-components/media_player.braviatv_psk#configuration) are followed
+- [ ] The installation instructions for the TV from [here](https://github.com/custom-components/media_player.braviatv_psk#installation-instructions-tv) are followed
 
 **Your config.yaml**
 ```yaml
