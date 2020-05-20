@@ -5,7 +5,11 @@ For more details about this platform, please refer to the documentation at
 https://github.com/custom-components/media_player.braviatv_psk
 """
 import logging
+
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
+from homeassistant.const import (
+    ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
 
 try:
     from homeassistant.components.media_player import (MediaPlayerEntity, PLATFORM_SCHEMA)
@@ -23,9 +27,6 @@ except ImportError:
         SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
         SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
         SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
-from homeassistant.const import (
-    ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
-import homeassistant.helpers.config_validation as cv
 
 __version__ = '0.3.4'
 
