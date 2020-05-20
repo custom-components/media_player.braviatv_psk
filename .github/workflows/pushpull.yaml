@@ -1,0 +1,55 @@
+---
+name: Push/Pull actions
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: "ubuntu-latest"
+    name: Validate
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - name: HACS validation
+        uses: "hacs/integration/action@master"
+        env:
+          SKIP_BRANDS_CHECK: "True"
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CATEGORY: "integration"
+
+      - name: Hassfest validation
+        uses: "home-assistant/actions/hassfest@master"
+
+  style:
+    runs-on: "ubuntu-latest"
+    name: Check style formatting
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.x"
+      - run: python3 -m pip install black
+      - run: black .
+
+      - run: |
+          pip3 install flake8 flake8-docstrings
+          flake8 --version
+          flake8 .
+
+      - run: |
+          pip3 install isort
+          isort --version
+          isort --check-only --verbose
+
+      - run: |
+          pip3 install yamllint
+          yamllint --version
+          yamllint .
+
+      - run: if git ls-files | xargs file | grep CRLF; then exit 1; fi
