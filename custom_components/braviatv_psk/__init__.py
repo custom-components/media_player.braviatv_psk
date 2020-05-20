@@ -1,1 +1,1 @@
-"""Sony Bravia TV PSK init file"""
+"""Sony Bravia TV PSK init file."""
