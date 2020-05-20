@@ -90,6 +90,7 @@ BRAVIA_COMMAND_SCHEMA = vol.Schema({
 
 
 def convert_time_format(time_format, time_raw):
+    """Convert time format."""
     if time_format == CONF_12H:
         hours, minutes = time_raw.split(':')
         hours, minutes = int(hours), int(minutes)
