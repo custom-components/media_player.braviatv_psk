@@ -1,5 +1,6 @@
 ![Validate with HACS](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20HACS/badge.svg)
 ![Validate with hassfest](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20hassfest/badge.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 [![maintained](https://img.shields.io/maintenance/yes/2020.svg)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg)](#)
