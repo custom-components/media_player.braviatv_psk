@@ -3,7 +3,22 @@ bravia_command:
   fields:
     entity_id:
       description: Name(s) of entities to turn on.
-      example: 'media_player.bravia_tv'
+      example: media_player.sony_bravia_tv
     command_id:
-      description: The ID of the command to send to TV.
-      example: 'ChannelUp'
+      description: >
+        The ID of the command to send to TV.
+        Check the Github page of this component for the list with command_ids.
+      example: ChannelUp
+bravia_open_app:
+  description: Opens an app on Bravia TV.
+  fields:
+    entity_id:
+      description: Name(s) of entities to turn on.
+      example: media_player.sony_bravia_tv
+    uri:
+      description: >
+        The uri of the app to open on the TV.
+        Check the Github page of this component for a list with uris of apps.
+        The example below is for Youtube.
+      example: >
+        com.sony.dtv.com.google.android.youtube.tv.com.google.android.apps.youtube.tv.activity.ShellActivity

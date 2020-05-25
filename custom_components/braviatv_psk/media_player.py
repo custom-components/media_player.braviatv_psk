@@ -26,7 +26,6 @@ except ImportError:
     )
 try:
     from homeassistant.components.media_player.const import (
-        DOMAIN,
         SUPPORT_NEXT_TRACK,
         SUPPORT_PAUSE,
         SUPPORT_PREVIOUS_TRACK,
@@ -43,7 +42,6 @@ try:
     )
 except ImportError:
     from homeassistant.components.media_player import (
-        DOMAIN,
         SUPPORT_NEXT_TRACK,
         SUPPORT_PAUSE,
         SUPPORT_PREVIOUS_TRACK,
@@ -59,9 +57,11 @@ except ImportError:
         MEDIA_TYPE_TVSHOW,
     )
 
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 _LOGGER = logging.getLogger(__name__)
+
+DOMAIN = "braviatv_psk"
 
 SUPPORT_BRAVIA = (
     SUPPORT_PAUSE
@@ -158,14 +158,20 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 SERVICE_BRAVIA_COMMAND = "bravia_command"
+SERVICE_BRAVIA_OPEN_APP = "bravia_open_app"
 
 ATTR_COMMAND_ID = "command_id"
+ATTR_URI = "uri"
 
 BRAVIA_COMMAND_SCHEMA = vol.Schema(
     {
-        vol.Optional(ATTR_ENTITY_ID): cv.entity_id,
+        vol.Required(ATTR_ENTITY_ID): cv.entity_id,
         vol.Required(ATTR_COMMAND_ID): cv.string,
     }
+)
+
+BRAVIA_OPEN_APP_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTITY_ID): cv.entity_id, vol.Required(ATTR_URI): cv.string}
 )
 
 # pylint: disable=unused-argument
@@ -207,12 +213,25 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     )
     add_devices([device])
 
+    def send_command(call):
+        """Send command to TV."""
+        command_id = call.data.get(ATTR_COMMAND_ID)
+        device.send_command(command_id)
+
+    def open_app(call):
+        """Open app on TV."""
+        uri = call.data.get(ATTR_URI)
+        device.open_app(uri)
+
     hass.services.register(
-        DOMAIN,
-        SERVICE_BRAVIA_COMMAND,
-        lambda service: device.send_command(service.data[ATTR_COMMAND_ID]),
-        schema=BRAVIA_COMMAND_SCHEMA,
+        DOMAIN, SERVICE_BRAVIA_COMMAND, send_command, schema=BRAVIA_COMMAND_SCHEMA
     )
+
+    # Only add the open_app service when TV is Android
+    if android:
+        hass.services.register(
+            DOMAIN, SERVICE_BRAVIA_OPEN_APP, open_app, schema=BRAVIA_OPEN_APP_SCHEMA
+        )
 
 
 class BraviaTVEntity(MediaPlayerEntity):
@@ -305,6 +324,9 @@ class BraviaTVEntity(MediaPlayerEntity):
             elif self._program_name == TV_WAIT:
                 # TV is starting up, takes some time before it responds
                 _LOGGER.info("TV is starting, no info available yet")
+            # elif power_status == "standby":
+            #     self._refresh_channels()
+            #     self._state = STATE_OFF
             else:
                 self._state = STATE_OFF
 
@@ -568,7 +590,15 @@ class BraviaTVEntity(MediaPlayerEntity):
 
     def send_command(self, command_id):
         """Send arbitrary command to TV via HA service."""
+        if self._state == STATE_OFF:
+            return
         self._braviarc.send_command(command_id)
+
+    def open_app(self, uri):
+        """Open app with given uri."""
+        if self._state == STATE_OFF:
+            return
+        self._braviarc.open_app(uri)
 
     def _convert_title_to_label(self, title):
         return_value = title
