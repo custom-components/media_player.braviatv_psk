@@ -9,92 +9,170 @@ import logging
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.const import (
-    ATTR_ENTITY_ID, CONF_HOST, CONF_NAME, CONF_MAC, STATE_OFF, STATE_ON)
+    ATTR_ENTITY_ID,
+    CONF_HOST,
+    CONF_MAC,
+    CONF_NAME,
+    STATE_OFF,
+    STATE_ON,
+)
 
 try:
-    from homeassistant.components.media_player import (MediaPlayerEntity, PLATFORM_SCHEMA)
-except ImportError:
-    from homeassistant.components.media_player import (MediaPlayerDevice as MediaPlayerEntity, PLATFORM_SCHEMA)
-try:
-    from homeassistant.components.media_player.const import (
-        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
-        SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
-        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
-        SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
+    from homeassistant.components.media_player import MediaPlayerEntity, PLATFORM_SCHEMA
 except ImportError:
     from homeassistant.components.media_player import (
-        SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK,
-        SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_VOLUME_MUTE, SUPPORT_PLAY,
-        SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_STEP, SUPPORT_VOLUME_SET,
-        SUPPORT_SELECT_SOURCE, SUPPORT_STOP, MEDIA_TYPE_TVSHOW)
+        MediaPlayerDevice as MediaPlayerEntity,
+        PLATFORM_SCHEMA,
+    )
+try:
+    from homeassistant.components.media_player.const import (
+        SUPPORT_NEXT_TRACK,
+        SUPPORT_PAUSE,
+        SUPPORT_PREVIOUS_TRACK,
+        SUPPORT_TURN_ON,
+        SUPPORT_TURN_OFF,
+        SUPPORT_VOLUME_MUTE,
+        SUPPORT_PLAY,
+        SUPPORT_PLAY_MEDIA,
+        SUPPORT_VOLUME_STEP,
+        SUPPORT_VOLUME_SET,
+        SUPPORT_SELECT_SOURCE,
+        SUPPORT_STOP,
+        MEDIA_TYPE_TVSHOW,
+    )
+except ImportError:
+    from homeassistant.components.media_player import (
+        SUPPORT_NEXT_TRACK,
+        SUPPORT_PAUSE,
+        SUPPORT_PREVIOUS_TRACK,
+        SUPPORT_TURN_ON,
+        SUPPORT_TURN_OFF,
+        SUPPORT_VOLUME_MUTE,
+        SUPPORT_PLAY,
+        SUPPORT_PLAY_MEDIA,
+        SUPPORT_VOLUME_STEP,
+        SUPPORT_VOLUME_SET,
+        SUPPORT_SELECT_SOURCE,
+        SUPPORT_STOP,
+        MEDIA_TYPE_TVSHOW,
+    )
 
-__version__ = '0.3.5'
+__version__ = "0.3.5"
 
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "braviatv_psk"
 
-SUPPORT_BRAVIA = \
-    SUPPORT_PAUSE | SUPPORT_VOLUME_STEP | SUPPORT_VOLUME_MUTE | \
-    SUPPORT_VOLUME_SET | SUPPORT_PREVIOUS_TRACK | SUPPORT_NEXT_TRACK | \
-    SUPPORT_TURN_ON | SUPPORT_TURN_OFF | SUPPORT_PLAY_MEDIA | \
-    SUPPORT_SELECT_SOURCE | SUPPORT_PLAY | SUPPORT_STOP
+SUPPORT_BRAVIA = (
+    SUPPORT_PAUSE
+    | SUPPORT_VOLUME_STEP
+    | SUPPORT_VOLUME_MUTE
+    | SUPPORT_VOLUME_SET
+    | SUPPORT_PREVIOUS_TRACK
+    | SUPPORT_NEXT_TRACK
+    | SUPPORT_TURN_ON
+    | SUPPORT_TURN_OFF
+    | SUPPORT_PLAY_MEDIA
+    | SUPPORT_SELECT_SOURCE
+    | SUPPORT_PLAY
+    | SUPPORT_STOP
+)
 
-DEFAULT_NAME = 'Sony Bravia TV'
-DEVICE_CLASS_TV = 'tv'
+DEFAULT_NAME = "Sony Bravia TV"
+DEVICE_CLASS_TV = "tv"
 
 # Config file
-CONF_12H = '12H'
-CONF_24H = '24H'
-CONF_PSK = 'psk'
-CONF_AMP = 'amp'
-CONF_ANDROID = 'android'
-CONF_SOURCE_FILTER = 'sourcefilter'
-CONF_TIME_FORMAT = 'time_format'
+CONF_12H = "12H"
+CONF_24H = "24H"
+CONF_PSK = "psk"
+CONF_AMP = "amp"
+CONF_ANDROID = "android"
+CONF_SOURCE_FILTER = "sourcefilter"
+CONF_TIME_FORMAT = "time_format"
 CONF_USER_LABELS = "user_labels"
 
 # Some additional info to show specific for Sony Bravia TV
-TV_WAIT = 'TV started, waiting for program info'
-TV_APP_OPENED = 'App opened'
-TV_NO_INFO = 'No info (resumed after pause or app opened)'
+TV_WAIT = "TV started, waiting for program info"
+TV_APP_OPENED = "App opened"
+TV_NO_INFO = "No info (resumed after pause or app opened)"
 PLAY_MEDIA_OPTIONS = [
-    'Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6', 'Num7', 'Num8', 'Num9',
-    'Num0', 'Num11', 'Num12', 'Netflix', 'Red', 'Green', 'Yellow', 'Blue',
-    'ChannelUp', 'ChannelDown', 'Up', 'Down', 'Left', 'Right', 'Display', 'Tv',
-    'Confirm', 'Home', 'EPG', 'Return', 'Options', 'Exit', 'Teletext', 'Input',
-    'TvPause', 'Play', 'Pause', 'Stop', 'HDMI 1', 'HDMI 2', 'HDMI 3', 'HDMI 4',
-    'SleepTimer', 'GooglePlay'
+    "Num1",
+    "Num2",
+    "Num3",
+    "Num4",
+    "Num5",
+    "Num6",
+    "Num7",
+    "Num8",
+    "Num9",
+    "Num0",
+    "Num11",
+    "Num12",
+    "Netflix",
+    "Red",
+    "Green",
+    "Yellow",
+    "Blue",
+    "ChannelUp",
+    "ChannelDown",
+    "Up",
+    "Down",
+    "Left",
+    "Right",
+    "Display",
+    "Tv",
+    "Confirm",
+    "Home",
+    "EPG",
+    "Return",
+    "Options",
+    "Exit",
+    "Teletext",
+    "Input",
+    "TvPause",
+    "Play",
+    "Pause",
+    "Stop",
+    "HDMI 1",
+    "HDMI 2",
+    "HDMI 3",
+    "HDMI 4",
+    "SleepTimer",
+    "GooglePlay",
 ]
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_HOST): cv.string,
-    vol.Required(CONF_PSK): cv.string,
-    vol.Optional(CONF_MAC): cv.string,
-    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_AMP, default=False): cv.boolean,
-    vol.Optional(CONF_ANDROID, default=False): cv.boolean,
-    vol.Optional(CONF_SOURCE_FILTER, default=[]): vol.All(
-        cv.ensure_list, [cv.string]),
-    vol.Optional(CONF_TIME_FORMAT, default=CONF_24H): vol.In(
-        [CONF_12H, CONF_24H]),
-    vol.Optional(CONF_USER_LABELS, default=False): cv.boolean,
-})
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_HOST): cv.string,
+        vol.Required(CONF_PSK): cv.string,
+        vol.Optional(CONF_MAC): cv.string,
+        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+        vol.Optional(CONF_AMP, default=False): cv.boolean,
+        vol.Optional(CONF_ANDROID, default=False): cv.boolean,
+        vol.Optional(CONF_SOURCE_FILTER, default=[]): vol.All(
+            cv.ensure_list, [cv.string]
+        ),
+        vol.Optional(CONF_TIME_FORMAT, default=CONF_24H): vol.In([CONF_12H, CONF_24H]),
+        vol.Optional(CONF_USER_LABELS, default=False): cv.boolean,
+    }
+)
 
-SERVICE_BRAVIA_COMMAND = 'bravia_command'
-SERVICE_BRAVIA_OPEN_APP = 'bravia_open_app'
+SERVICE_BRAVIA_COMMAND = "bravia_command"
+SERVICE_BRAVIA_OPEN_APP = "bravia_open_app"
 
-ATTR_COMMAND_ID = 'command_id'
-ATTR_URI = 'uri'
+ATTR_COMMAND_ID = "command_id"
+ATTR_URI = "uri"
 
-BRAVIA_COMMAND_SCHEMA = vol.Schema({
-    vol.Required(ATTR_ENTITY_ID): cv.entity_id,
-    vol.Required(ATTR_COMMAND_ID): cv.string
-})
+BRAVIA_COMMAND_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTITY_ID): cv.entity_id,
+        vol.Required(ATTR_COMMAND_ID): cv.string,
+    }
+)
 
-BRAVIA_OPEN_APP_SCHEMA = vol.Schema({
-    vol.Required(ATTR_ENTITY_ID): cv.entity_id,
-    vol.Required(ATTR_URI): cv.string
-})
+BRAVIA_OPEN_APP_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTITY_ID): cv.entity_id, vol.Required(ATTR_URI): cv.string}
+)
 
 # pylint: disable=unused-argument
 
@@ -102,15 +180,15 @@ BRAVIA_OPEN_APP_SCHEMA = vol.Schema({
 def convert_time_format(time_format, time_raw):
     """Convert time format."""
     if time_format == CONF_12H:
-        hours, minutes = time_raw.split(':')
+        hours, minutes = time_raw.split(":")
         hours, minutes = int(hours), int(minutes)
-        setting = 'AM'
+        setting = "AM"
         if hours > 12:
-            setting = 'PM'
+            setting = "PM"
             hours -= 12
         elif hours == 0:
             hours = 12
-        return '{}:{:02d} {}'.format(hours, minutes, setting)
+        return "{}:{:02d} {}".format(hours, minutes, setting)
     return time_raw
 
 
@@ -127,11 +205,12 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     user_labels = config.get(CONF_USER_LABELS)
 
     if host is None or psk is None:
-        _LOGGER.error(
-            "No TV IP address or Pre-Shared Key found in configuration file")
+        _LOGGER.error("No TV IP address or Pre-Shared Key found in configuration file")
         return
 
-    device = BraviaTVEntity(host, psk, mac, name, amp, android, source_filter, time_format, user_labels)
+    device = BraviaTVEntity(
+        host, psk, mac, name, amp, android, source_filter, time_format, user_labels
+    )
     add_devices([device])
 
     def send_command(call):
@@ -145,22 +224,31 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         device.open_app(uri)
 
     hass.services.register(
-        DOMAIN, SERVICE_BRAVIA_COMMAND,
-        send_command,
-        schema=BRAVIA_COMMAND_SCHEMA)
+        DOMAIN, SERVICE_BRAVIA_COMMAND, send_command, schema=BRAVIA_COMMAND_SCHEMA
+    )
 
     # Only add the open_app service when TV is Android
     if android:
         hass.services.register(
-            DOMAIN, SERVICE_BRAVIA_OPEN_APP,
-            open_app,
-            schema=BRAVIA_OPEN_APP_SCHEMA)
+            DOMAIN, SERVICE_BRAVIA_OPEN_APP, open_app, schema=BRAVIA_OPEN_APP_SCHEMA
+        )
 
 
 class BraviaTVEntity(MediaPlayerEntity):
     """Representation of a Sony Bravia TV."""
 
-    def __init__(self, host, psk, mac, name, amp, android, source_filter, time_format, user_labels):
+    def __init__(
+        self,
+        host,
+        psk,
+        mac,
+        name,
+        amp,
+        android,
+        source_filter,
+        time_format,
+        user_labels,
+    ):
         """Initialize the Sony Bravia device."""
 
         _LOGGER.info("Setting up Sony Bravia TV")
@@ -193,15 +281,15 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._device_class = DEVICE_CLASS_TV
         self._time_format = time_format
         self._user_labels = user_labels
-        
+
         if mac:
-            self._unique_id = '{}-{}'.format(mac, name)
+            self._unique_id = "{}-{}".format(mac, name)
         else:
-            self._unique_id = '{}-{}'.format(host, name)
+            self._unique_id = "{}-{}".format(host, name)
 
         _LOGGER.debug(
-            "Set up Sony Bravia TV with IP: %s, PSK: %s, MAC: %s", host, psk,
-            mac)
+            "Set up Sony Bravia TV with IP: %s, PSK: %s, MAC: %s", host, psk, mac
+        )
 
         self.update()
 
@@ -209,7 +297,7 @@ class BraviaTVEntity(MediaPlayerEntity):
         """Update TV info."""
         try:
             power_status = self._braviarc.get_power_status()
-            if power_status == 'active':
+            if power_status == "active":
                 self._state = STATE_ON
                 self._refresh_volume()
                 self._refresh_channels()
@@ -218,21 +306,21 @@ class BraviaTVEntity(MediaPlayerEntity):
                 if playing_info is None or not playing_info:
                     self._program_name = TV_NO_INFO
                 else:
-                    self._program_name = playing_info.get('programTitle')
-                    self._channel_name = playing_info.get('title')
-                    self._program_media_type = playing_info.get(
-                        'programMediaType')
-                    self._channel_number = playing_info.get('dispNum')
-                    self._source = playing_info.get('title')
-                    self._content_uri = playing_info.get('uri')
-                    self._duration = playing_info.get('durationSec')
-                    self._start_date_time = playing_info.get('startDateTime')
+                    self._program_name = playing_info.get("programTitle")
+                    self._channel_name = playing_info.get("title")
+                    self._program_media_type = playing_info.get("programMediaType")
+                    self._channel_number = playing_info.get("dispNum")
+                    self._source = playing_info.get("title")
+                    self._content_uri = playing_info.get("uri")
+                    self._duration = playing_info.get("durationSec")
+                    self._start_date_time = playing_info.get("startDateTime")
                     # Get time info from TV program
                     if self._start_date_time and self._duration:
                         time_info = self._braviarc.playing_time(
-                            self._start_date_time, self._duration)
-                        self._start_time = time_info.get('start_time')
-                        self._end_time = time_info.get('end_time')
+                            self._start_date_time, self._duration
+                        )
+                        self._start_time = time_info.get("start_time")
+                        self._end_time = time_info.get("end_time")
             elif self._program_name == TV_WAIT:
                 # TV is starting up, takes some time before it responds
                 _LOGGER.info("TV is starting, no info available yet")
@@ -243,8 +331,9 @@ class BraviaTVEntity(MediaPlayerEntity):
                 self._state = STATE_OFF
 
         except Exception as exception_instance:  # pylint: disable=broad-except
-            _LOGGER.debug("No data received from TV. Error message: %s",
-                          exception_instance)
+            _LOGGER.debug(
+                "No data received from TV. Error message: %s", exception_instance
+            )
             self._state = STATE_OFF
 
     def _reset_playing_info(self):
@@ -263,10 +352,10 @@ class BraviaTVEntity(MediaPlayerEntity):
         """Refresh volume information."""
         volume_info = self._braviarc.get_volume_info()
         if volume_info is not None:
-            self._volume = volume_info.get('volume')
-            self._min_volume = volume_info.get('minVolume')
-            self._max_volume = volume_info.get('maxVolume')
-            self._muted = volume_info.get('mute')
+            self._volume = volume_info.get("volume")
+            self._min_volume = volume_info.get("minVolume")
+            self._max_volume = volume_info.get("maxVolume")
+            self._muted = volume_info.get("mute")
 
     def _refresh_channels(self):
         if not self._source_list:
@@ -276,10 +365,13 @@ class BraviaTVEntity(MediaPlayerEntity):
                 for key in self._content_mapping:
                     self._source_list.append(key)
             else:
-                filtered_dict = {title: uri for (title, uri) in
-                                 self._content_mapping.items()
-                                 if any(filter_title in title for filter_title
-                                        in self._source_filter)}
+                filtered_dict = {
+                    title: uri
+                    for (title, uri) in self._content_mapping.items()
+                    if any(
+                        filter_title in title for filter_title in self._source_filter
+                    )
+                }
                 for key in filtered_dict:
                     self._source_list.append(key)
 
@@ -355,8 +447,9 @@ class BraviaTVEntity(MediaPlayerEntity):
         return_value = None
         if self._channel_name is not None:
             if self._channel_number is not None:
-                return_value = '{0!s}: {1}'.format(
-                    self._channel_number.lstrip('0'), self._channel_name)
+                return_value = "{0!s}: {1}".format(
+                    self._channel_number.lstrip("0"), self._channel_name
+                )
             else:
                 return_value = self._channel_name
         return self._convert_title_to_label(return_value)
@@ -370,7 +463,7 @@ class BraviaTVEntity(MediaPlayerEntity):
         return_value = None
         if self._program_name is not None:
             if self._start_time is not None and self._end_time is not None:
-                return_value = '{0} [{1} - {2}]'.format(
+                return_value = "{0} [{1} - {2}]".format(
                     self._program_name,
                     convert_time_format(self._time_format, self._start_time),
                     convert_time_format(self._time_format, self._end_time),
@@ -461,7 +554,7 @@ class BraviaTVEntity(MediaPlayerEntity):
         Will pause TV when TV tuner is on.
         """
         self._playing = False
-        if self._program_media_type == 'tv' or self._program_name is not None:
+        if self._program_media_type == "tv" or self._program_name is not None:
             self._braviarc.media_tvpause()
         else:
             self._braviarc.media_pause()
@@ -471,8 +564,8 @@ class BraviaTVEntity(MediaPlayerEntity):
 
         Will switch to next channel when TV tuner is on.
         """
-        if self._program_media_type == 'tv' or self._program_name is not None:
-            self._braviarc.send_command('ChannelUp')
+        if self._program_media_type == "tv" or self._program_name is not None:
+            self._braviarc.send_command("ChannelUp")
         else:
             self._braviarc.media_next_track()
 
@@ -481,8 +574,8 @@ class BraviaTVEntity(MediaPlayerEntity):
 
         Will switch to previous channel when TV tuner is on.
         """
-        if self._program_media_type == 'tv' or self._program_name is not None:
-            self._braviarc.send_command('ChannelDown')
+        if self._program_media_type == "tv" or self._program_name is not None:
+            self._braviarc.send_command("ChannelDown")
         else:
             self._braviarc.media_previous_track()
 
