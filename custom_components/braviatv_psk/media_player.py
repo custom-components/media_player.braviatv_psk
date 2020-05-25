@@ -87,12 +87,12 @@ ATTR_URI = 'uri'
 
 BRAVIA_COMMAND_SCHEMA = vol.Schema({
     vol.Required(ATTR_ENTITY_ID): cv.entity_id,
-    vol.Required(ATTR_COMMAND_ID): cv.string,
+    vol.Required(ATTR_COMMAND_ID): cv.string
 })
 
 BRAVIA_OPEN_APP_SCHEMA = vol.Schema({
     vol.Required(ATTR_ENTITY_ID): cv.entity_id,
-    vol.Required(ATTR_URI): cv.string,
+    vol.Required(ATTR_URI): cv.string
 })
 
 # pylint: disable=unused-argument
