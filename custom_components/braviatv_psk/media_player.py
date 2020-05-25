@@ -99,6 +99,7 @@ BRAVIA_OPEN_APP_SCHEMA = vol.Schema({
 
 
 def convert_time_format(time_format, time_raw):
+    """Convert time format."""
     if time_format == CONF_12H:
         hours, minutes = time_raw.split(':')
         hours, minutes = int(hours), int(minutes)
@@ -500,7 +501,7 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._braviarc.send_command(command_id)
 
     def open_app(self, uri):
-        """Opens app with given uri."""
+        """Open app with given uri."""
         if self._state == STATE_OFF:
             return
         self._braviarc.open_app(uri)
