@@ -13,6 +13,9 @@ A clear and concise description of what the issue is.
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Bravia custom component version**
+Which Bravia custom component version are you using. And did it work on a previous version, if so what was the last working version.
+
 **Home Assistant version**
 Which Home Assistant version are you using. And did it work on a previous version, if so what was the last working version.
 
