@@ -219,10 +219,24 @@ AndroidMenu
 ```
 
 #### braviatv_psk.bravia_open_app
-If you have an Android TV you can use an uri from the list below to open the corresponding app. See [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698/164) post to get a list of all apps supported by your TV.
+If you have an Android TV you can use an uri to open the corresponding app.
+
+The uri needs to be determined specific for your TV. The command to do this is:
+```
+curl -H 'Content-Type: application/json' -H 'X-Auth-PSK:[psk]' -X POST -d "{'id': 1, 'method': 'getApplicationList', 'version': '1.0', 'params': ['']}" http://[IP]/sony/appControl
+```
+Change `[psk]` with your psk and `[IP]` with the IP address of the TV.
+
+Also see [this](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698/164) post to get a list of all apps supported by your TV.
+Some examples:
 ```
 YouTube uri: "com.sony.dtv.com.google.android.youtube.tv.com.google.android.apps.youtube.tv.activity.ShellActivity"
 Music uri: "com.sony.dtv.com.sony.dtv.osat.music.com.sonyericsson.music.MusicActivity"
 Netflix uri: "com.sony.dtv.com.netflix.ninja.com.netflix.ninja.MainActivity"
 Kodi uri: "com.sony.dtv.org.xbmc.kodi.org.xbmc.kodi.Splash"
 ```
+Working uri's for Sony KD-55XF9005:
+[KD-55XF9005.txt](https://github.com/custom-components/media_player.braviatv_psk/files/4754110/KD-55XF9005.txt)
+
+Working uri's for Sony KD-50W805C:
+[KD-50W805C.txt](https://github.com/custom-components/media_player.braviatv_psk/files/4754111/KD-50W805C.txt)
