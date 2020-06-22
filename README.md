@@ -205,7 +205,7 @@ AndroidMenu
 #### braviatv_psk.bravia_open_app
 If you have an Android TV you can use an uri to open the corresponding app.
 
-The uri needs to be determined specific for your TV. The command to do this is:
+You can use the following command to get all uri's from the TV:
 ```
 curl -H 'Content-Type: application/json' -H 'X-Auth-PSK:[psk]' -X POST -d "{'id': 1, 'method': 'getApplicationList', 'version': '1.0', 'params': ['']}" http://[IP]/sony/appControl
 ```
