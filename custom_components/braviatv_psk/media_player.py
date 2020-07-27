@@ -4,8 +4,10 @@ Support for interface with a Sony Bravia TV.
 For more details about this platform, please refer to the documentation at
 https://github.com/custom-components/media_player.braviatv_psk
 """
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 import logging
-
+import asyncio
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.const import (
@@ -17,12 +19,29 @@ from homeassistant.const import (
     STATE_ON,
 )
 
+from .const import (
+    DOMAIN, 
+    CONF_12H,
+    CONF_24H,
+    CONF_PSK,
+    CONF_AMP,
+    CONF_ANDROID,
+    CONF_SOURCE_FILTER,
+    CONF_TIME_FORMAT,
+    CONF_USER_LABELS,
+    CONF_ENABLE_COOKIES,
+    CONF_USE_CEC_TITLES,
+    CONF_USE_CEC_URIS
+)
+
+from homeassistant.config_entries import ConfigEntry       
+from homeassistant.core import HomeAssistant
+
 try:
-    from homeassistant.components.media_player import MediaPlayerEntity, PLATFORM_SCHEMA
+    from homeassistant.components.media_player import MediaPlayerEntity
 except ImportError:
     from homeassistant.components.media_player import (
-        MediaPlayerDevice as MediaPlayerEntity,
-        PLATFORM_SCHEMA,
+        MediaPlayerDevice as MediaPlayerEntity
     )
 try:
     from homeassistant.components.media_player.const import (
@@ -61,8 +80,6 @@ __version__ = "0.3.5"
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = "braviatv_psk"
-
 SUPPORT_BRAVIA = (
     SUPPORT_PAUSE
     | SUPPORT_VOLUME_STEP
@@ -80,16 +97,6 @@ SUPPORT_BRAVIA = (
 
 DEFAULT_NAME = "Sony Bravia TV"
 DEVICE_CLASS_TV = "tv"
-
-# Config file
-CONF_12H = "12H"
-CONF_24H = "24H"
-CONF_PSK = "psk"
-CONF_AMP = "amp"
-CONF_ANDROID = "android"
-CONF_SOURCE_FILTER = "sourcefilter"
-CONF_TIME_FORMAT = "time_format"
-CONF_USER_LABELS = "user_labels"
 
 # Some additional info to show specific for Sony Bravia TV
 TV_WAIT = "TV started, waiting for program info"
@@ -141,23 +148,8 @@ PLAY_MEDIA_OPTIONS = [
     "GooglePlay",
 ]
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Required(CONF_HOST): cv.string,
-        vol.Required(CONF_PSK): cv.string,
-        vol.Optional(CONF_MAC): cv.string,
-        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-        vol.Optional(CONF_AMP, default=False): cv.boolean,
-        vol.Optional(CONF_ANDROID, default=False): cv.boolean,
-        vol.Optional(CONF_SOURCE_FILTER, default=[]): vol.All(
-            cv.ensure_list, [cv.string]
-        ),
-        vol.Optional(CONF_TIME_FORMAT, default=CONF_24H): vol.In([CONF_12H, CONF_24H]),
-        vol.Optional(CONF_USER_LABELS, default=False): cv.boolean,
-    }
-)
-
 SERVICE_BRAVIA_COMMAND = "bravia_command"
+SERVICE_BRAVIA_LIST_APPS ="bravia_list_apps"
 SERVICE_BRAVIA_OPEN_APP = "bravia_open_app"
 
 ATTR_COMMAND_ID = "command_id"
@@ -165,14 +157,18 @@ ATTR_URI = "uri"
 
 BRAVIA_COMMAND_SCHEMA = vol.Schema(
     {
-        vol.Required(ATTR_ENTITY_ID): cv.entity_id,
+        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
         vol.Required(ATTR_COMMAND_ID): cv.string,
     }
 )
 
 BRAVIA_OPEN_APP_SCHEMA = vol.Schema(
-    {vol.Required(ATTR_ENTITY_ID): cv.entity_id, vol.Required(ATTR_URI): cv.string}
+    {vol.Required(ATTR_ENTITY_ID): cv.entity_ids, vol.Required(ATTR_URI): cv.string}
 )
+
+
+BRAVIA_LIST_APPS_SCHEMA = vol.Schema(
+  {vol.Required(ATTR_ENTITY_ID): cv.entity_ids})
 
 # pylint: disable=unused-argument
 
@@ -191,27 +187,42 @@ def convert_time_format(time_format, time_raw):
         return "{}:{:02d} {}".format(hours, minutes, setting)
     return time_raw
 
+def remove_app_entities(hass):
+    for entity_id in hass.states.async_entity_ids(domain_filter='app'):
+        hass.states.async_remove(entity_id)
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_entry(hass: HomeAssistant, config: ConfigEntry, async_add_devices, discovery_info=None):
     """Set up the Sony Bravia TV platform."""
-    host = config.get(CONF_HOST)
-    psk = config.get(CONF_PSK)
-    mac = config.get(CONF_MAC)
-    name = config.get(CONF_NAME)
-    amp = config.get(CONF_AMP)
-    android = config.get(CONF_ANDROID)
-    source_filter = config.get(CONF_SOURCE_FILTER)
-    time_format = config.get(CONF_TIME_FORMAT)
-    user_labels = config.get(CONF_USER_LABELS)
+    host = config.data.get(CONF_HOST)
+    psk = config.data.get(CONF_PSK)
+    mac = config.data.get(CONF_MAC)
+    name = config.data.get(CONF_NAME)
+    amp = config.data.get(CONF_AMP)
+    android = config.data.get(CONF_ANDROID)
+    source_filter = config.data.get(CONF_SOURCE_FILTER)
+    time_format = config.data.get(CONF_TIME_FORMAT)
+    user_labels = config.data.get(CONF_USER_LABELS)
+    enable_cookies = config.data.get(CONF_ENABLE_COOKIES)
+    use_cec_titles = config.data.get(CONF_USE_CEC_TITLES)
+    use_cec_uris = config.data.get(CONF_USE_CEC_URIS)
 
     if host is None or psk is None:
         _LOGGER.error("No TV IP address or Pre-Shared Key found in configuration file")
         return
 
-    device = BraviaTVEntity(
-        host, psk, mac, name, amp, android, source_filter, time_format, user_labels
+    from braviarc import braviarc
+
+    braviarc = braviarc.BraviaRC(host, psk, mac)
+    sys_info = await hass.async_add_executor_job(
+        braviarc.get_system_info
     )
-    add_devices([device])
+    unique_id = sys_info['serial']
+    model = sys_info['model']
+
+    device = BraviaTVEntity(
+        braviarc, unique_id, model, host, psk, mac, name, amp, android, source_filter, time_format, user_labels, enable_cookies, use_cec_titles, use_cec_uris
+    )
+    async_add_devices([device])
 
     def send_command(call):
         """Send command to TV."""
@@ -222,23 +233,33 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         """Open app on TV."""
         uri = call.data.get(ATTR_URI)
         device.open_app(uri)
+        
+    def list_apps(call):
+        device.list_apps()
 
-    hass.services.register(
+    hass.services.async_register(
         DOMAIN, SERVICE_BRAVIA_COMMAND, send_command, schema=BRAVIA_COMMAND_SCHEMA
     )
 
     # Only add the open_app service when TV is Android
     if android:
-        hass.services.register(
+        hass.services.async_register(
             DOMAIN, SERVICE_BRAVIA_OPEN_APP, open_app, schema=BRAVIA_OPEN_APP_SCHEMA
         )
+        hass.services.async_register(
+            DOMAIN, SERVICE_BRAVIA_LIST_APPS, list_apps, schema=BRAVIA_LIST_APPS_SCHEMA
+        )
 
+    remove_app_entities(hass)
 
 class BraviaTVEntity(MediaPlayerEntity):
     """Representation of a Sony Bravia TV."""
 
     def __init__(
         self,
+        braviarc,
+        unique_id,
+        model,
         host,
         psk,
         mac,
@@ -248,13 +269,14 @@ class BraviaTVEntity(MediaPlayerEntity):
         source_filter,
         time_format,
         user_labels,
+        enable_cookies,
+        use_cec_titles,
+        use_cec_uris
     ):
         """Initialize the Sony Bravia device."""
 
         _LOGGER.info("Setting up Sony Bravia TV")
-        from braviapsk import sony_bravia_psk
-
-        self._braviarc = sony_bravia_psk.BraviaRC(host, psk, mac)
+        self._braviarc = braviarc
         self._name = name
         self._amp = amp
         self._android = android
@@ -281,27 +303,58 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._device_class = DEVICE_CLASS_TV
         self._time_format = time_format
         self._user_labels = user_labels
+        self._enable_cookies = enable_cookies
+        self._app_list = []
+        
+        self._use_cec_titles = use_cec_titles
+        self._use_cec_uris = use_cec_uris
 
-        if mac:
-            self._unique_id = "{}-{}".format(mac, name)
-        else:
-            self._unique_id = "{}-{}".format(host, name)
+        self._unique_id = unique_id
+        self._model = model
 
         _LOGGER.debug(
-            "Set up Sony Bravia TV with IP: %s, PSK: %s, MAC: %s", host, psk, mac
+            "Set up Sony Bravia TV with IP: %s, PSK: %s, MAC: %s, Serial: %s", host, psk, mac, unique_id
         )
 
-        self.update()
-
-    def update(self):
+    async def async_update(self):
         """Update TV info."""
         try:
-            power_status = self._braviarc.get_power_status()
+            if self._enable_cookies and not self._braviarc.is_connected():
+                await self.hass.async_add_executor_job(
+                    self._braviarc.connect, None, 'hass', 'Home assistant'
+                )
+
+            power_status = await self.hass.async_add_executor_job(
+                self._braviarc.get_power_status
+            )
+            
+            if not self._app_list or power_status == "active":
+                app_list = await self.hass.async_add_executor_job(
+                        self._braviarc.load_app_list
+                )
+                if self._app_list != app_list:
+                    self._app_list = app_list
+                    remove_app_entities(self.hass)
+                    for app in self._app_list:
+                        app_entity_name = app['name'].replace(' ', '_')
+                        app_entity_name = ''.join(e for e in app_entity_name if e.isalnum())
+                        app_entity_name = 'app.%s_%s' % (app_entity_name, self._unique_id)
+                        self.hass.states.async_set(app_entity_name, None, {
+                            'name': app['name'],
+                            'entity_picture' : app['icon_url'] ,
+                            'friendly_name': app['name'].replace(' ', '\n'),
+                            'package': app['id'],
+                        })
+
+            if not self._source_list or power_status == "active":
+                await self._refresh_channels()
+
             if power_status == "active":
                 self._state = STATE_ON
-                self._refresh_volume()
-                self._refresh_channels()
-                playing_info = self._braviarc.get_playing_info()
+                await self._refresh_volume()
+                playing_info = await self.hass.async_add_executor_job(
+                    self._braviarc.get_playing_info
+                )
                 self._reset_playing_info()
                 if playing_info is None or not playing_info:
                     self._program_name = TV_NO_INFO
@@ -331,8 +384,8 @@ class BraviaTVEntity(MediaPlayerEntity):
                 self._state = STATE_OFF
 
         except Exception as exception_instance:  # pylint: disable=broad-except
-            _LOGGER.debug(
-                "No data received from TV. Error message: %s", exception_instance
+            _LOGGER.exception(
+                "No data received from TV."
             )
             self._state = STATE_OFF
 
@@ -348,35 +401,81 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._start_time = None
         self._end_time = None
 
-    def _refresh_volume(self):
+    async def _refresh_volume(self):
         """Refresh volume information."""
-        volume_info = self._braviarc.get_volume_info()
+        volume_info = await self.hass.async_add_executor_job(self._braviarc.get_volume_info)
         if volume_info is not None:
             self._volume = volume_info.get("volume")
             self._min_volume = volume_info.get("minVolume")
             self._max_volume = volume_info.get("maxVolume")
             self._muted = volume_info.get("mute")
 
-    def _refresh_channels(self):
-        if not self._source_list:
-            self._content_mapping = self._braviarc.load_source_list()
-            self._source_list = []
-            if not self._source_filter:  # list is empty
-                for key in self._content_mapping:
-                    self._source_list.append(key)
+    async def _refresh_channels(self):
+        def is_hdmi(uri):
+            return uri.startswith('extInput:hdmi')
+            
+        def is_cec(uri):
+            return uri.startswith('extInput:cec')
+            
+        self._content_mapping = await self.hass.async_add_executor_job(self._braviarc.load_source_list)
+        
+        self._source_list = []
+        
+        external_inputs = []
+        
+        if self._source_filter:  # list is not empty
+            filtered_dict = {
+                title: uri
+                for (title, uri) in self._content_mapping.items()
+                if any(
+                    filter_title in title for filter_title in self._source_filter
+                )
+            }
+            
+        for title, uri in self._content_mapping.items():
+            if is_hdmi(uri) or is_cec(uri):
+                external_inputs.append((title, uri))
             else:
-                filtered_dict = {
-                    title: uri
-                    for (title, uri) in self._content_mapping.items()
-                    if any(
-                        filter_title in title for filter_title in self._source_filter
-                    )
-                }
-                for key in filtered_dict:
-                    self._source_list.append(key)
+                self._source_list.append(title)
+        
+        merged_inputs = {}
+        
+        for title, uri in external_inputs:
+            port = parse_qs(urlparse.urlparse(uri).query)['port'][0]
+            
+            if port in merged_inputs:
+                merged_item = merged_inputs[port]
+            else:
+                merged_item = {}
+                
+            if is_hdmi(uri):
+                merged_item['hdmi_title'] = title
+                merged_item['hdmi_uri'] = uri
+            else:
+                merged_item['cec_title'] = title
+                merged_item['cec_uri'] = uri
+                
+            merged_inputs[port] = merged_item
+
+        for port, data in merged_inputs.items():
+            hdmi_title = data.get('hdmi_title')
+            hdmi_uri = data.get('hdmi_uri')
+            cec_title = data.get('cec_title')
+            cec_uri = data.get('cec_uri')
+            
+            if hdmi_uri and cec_uri:
+                title = cec_title if self._use_cec_titles else hdmi_title
+                uri = cec_uri if self._use_cec_uris else hdmi_uri
+            elif not hdmi_uri and not cec_uri:
+                continue
+            else:
+                uri = hdmi_uri if hdmi_uri else cec_uri
+                title = hdmi_title if hdmi_title else cec_title
+
+            self._source_list.append(title)
 
         if not self._label_list:
-            self._label_list = self._braviarc.get_current_external_input_status()
+            self._label_list = await self.hass.async_add_executor_job(self._braviarc.get_current_external_input_status)
             if self._label_list:
                 for key in self._source_list:
                     label = self._convert_title_to_label(key)
@@ -485,19 +584,48 @@ class BraviaTVEntity(MediaPlayerEntity):
         """Return the device class of the media player."""
         return self._device_class
 
-    def set_volume_level(self, volume):
-        """Set volume level, range 0..1."""
-        self._braviarc.set_volume_level(volume)
+    @property
+    def state_attributes(self):
+        attributes = super().state_attributes
+        if not attributes:
+            return {
+                "app_list": self._app_list
+            }
+        else:
+            attributes['app_list'] = self._app_list
+            return attributes
 
-    def turn_on(self):
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {
+                # Serial numbers are unique identifiers within a specific domain
+                (DOMAIN, self._unique_id)
+            },
+            "name": self.name,
+            "manufacturer": 'Sony',
+            "model": self._model
+        }
+
+    async def async_set_volume_level(self, volume):
+        """Set volume level, range 0..1."""
+        await self.hass.async_add_executor_job(
+            self._braviarc.set_volume_level, volume
+        )
+
+    async def async_turn_on(self):
         """Turn the media player on.
 
         Use a different command for Android as WOL is not working.
         """
         if self._android:
-            self._braviarc.turn_on_command()
+            await self.hass.async_add_executor_job(
+                self._braviarc.turn_on_command
+            )
         else:
-            self._braviarc.turn_on()
+            await self.hass.async_add_executor_job(
+                self._braviarc.turn_on
+            )
 
         # Show that TV is starting while it takes time
         # before program info is available
@@ -505,100 +633,135 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._state = STATE_ON
         self._program_name = TV_WAIT
 
-    def turn_off(self):
+    async def async_turn_off(self):
         """Turn the media player off.
 
         Use a different command for Android since IRCC is not working reliable.
         """
         if self._android:
-            self._braviarc.turn_off_command()
+            await self.hass.async_add_executor_job(
+                self._braviarc.turn_off_command
+            )
         else:
-            self._braviarc.turn_off()
+            await self.hass.async_add_executor_job(
+                self._braviarc.turn_off
+            )
 
-        self._state = STATE_OFF
-
-    def volume_up(self):
+    async def async_volume_up(self):
         """Volume up the media player."""
-        self._braviarc.volume_up()
+        await self.hass.async_add_executor_job(
+            self._braviarc.volume_up
+        )
 
-    def volume_down(self):
+    async def volume_down(self):
         """Volume down media player."""
-        self._braviarc.volume_down()
 
-    def mute_volume(self, mute):
+        await self.hass.async_add_executor_job( 
+            self._braviarc.volume_down
+        )
+
+    async def mute_volume(self, mute):
         """Send mute command."""
-        self._braviarc.mute_volume()
+        await self.hass.async_add_executor_job(
+            self._braviarc.mute_volume
+        )
 
-    def select_source(self, source):
+    async def select_source(self, source):
         """Set the input source."""
         title = self._convert_label_to_title(source)
         if title in self._content_mapping:
             uri = self._content_mapping[title]
-            self._braviarc.play_content(uri)
+            await self.hass.async_add_executor_job(
+                self._braviarc.play_content, uri
+            )
 
-    def media_play_pause(self):
+    async def media_play_pause(self):
         """Simulate play pause media player."""
         if self._playing:
-            self.media_pause()
+            await self.media_pause()
         else:
-            self.media_play()
+            await self.media_play()
 
-    def media_play(self):
+    async def media_play(self):
         """Send play command."""
         self._playing = True
-        self._braviarc.media_play()
+        
+        await self.hass.async_add_executor_job(
+            self._braviarc.media_play
+        )
 
-    def media_pause(self):
+    async def media_pause(self):
         """Send media pause command to media player.
 
         Will pause TV when TV tuner is on.
         """
         self._playing = False
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.media_tvpause()
+            await self.hass.async_add_executor_job(
+                self._braviarc.media_tvpause
+            )
         else:
-            self._braviarc.media_pause()
+            await self.hass.async_add_executor_job(
+                self._braviarc.media_pause
+            )
 
-    def media_next_track(self):
+    async def media_next_track(self):
         """Send next track command.
 
         Will switch to next channel when TV tuner is on.
         """
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.send_command("ChannelUp")
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, "ChannelUp"
+            )
         else:
-            self._braviarc.media_next_track()
+            await self.hass.async_add_executor_job(
+                self._braviarc.media_next_track
+            )
 
-    def media_previous_track(self):
+    async def media_previous_track(self):
         """Send the previous track command.
 
         Will switch to previous channel when TV tuner is on.
         """
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.send_command("ChannelDown")
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, "ChannelDown"
+            )
         else:
-            self._braviarc.media_previous_track()
+            await self.hass.async_add_executor_job(
+                self._braviarc.media_previous_track
+            )
 
-    def play_media(self, media_type, media_id, **kwargs):
+    async def play_media(self, media_type, media_id, **kwargs):
         """Play media."""
         _LOGGER.debug("Play media: %s (%s)", media_id, media_type)
 
         if media_id in PLAY_MEDIA_OPTIONS:
-            self._braviarc.send_command(media_id)
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, media_id
+            )
         else:
             _LOGGER.warning("Unsupported media_id: %s", media_id)
 
-    def send_command(self, command_id):
+    async def send_command(self, command_id):
         """Send arbitrary command to TV via HA service."""
         if self._state == STATE_OFF:
             return
-        self._braviarc.send_command(command_id)
+        await self.hass.async_add_executor_job(
+            self._braviarc.send_command, command_id
+        )
 
     def open_app(self, uri):
         """Open app with given uri."""
         if self._state == STATE_OFF:
             return
-        self._braviarc.open_app(uri)
+        self._braviarc.start_app(uri)
+
+    def list_apps(self):
+        """Open app with given uri."""
+        app_list = self._braviarc.load_app_list()
+        return app_list
 
     def _convert_title_to_label(self, title):
         return_value = title
@@ -615,3 +778,5 @@ class BraviaTVEntity(MediaPlayerEntity):
                 if item["label"] == label and item["title"] != "":
                     return_value = item["title"]
         return return_value
+
+
