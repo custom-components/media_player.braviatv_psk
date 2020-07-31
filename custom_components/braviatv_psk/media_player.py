@@ -336,14 +336,14 @@ class BraviaTVEntity(MediaPlayerEntity):
                     self._app_list = app_list
                     remove_app_entities(self.hass)
                     for app in self._app_list:
-                        app_entity_name = app['name'].replace(' ', '_')
+                        app_entity_name = app['title']
                         app_entity_name = ''.join(e for e in app_entity_name if e.isalnum())
                         app_entity_name = 'app.%s_%s' % (app_entity_name, self._unique_id)
                         self.hass.states.async_set(app_entity_name, None, {
-                            'name': app['name'],
-                            'entity_picture' : app['icon_url'] ,
-                            'friendly_name': app['name'].replace(' ', '\n'),
-                            'package': app['id'],
+                            'name': app['title'],
+                            'entity_picture' : app['icon'] ,
+                            'friendly_name': app['title'].replace(' ', '\n'),
+                            'package': app['uri'],
                         })
 
             if not self._source_list or power_status == "active":
