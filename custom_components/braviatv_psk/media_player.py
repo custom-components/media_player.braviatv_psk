@@ -753,9 +753,6 @@ class BraviaTVEntity(MediaPlayerEntity):
         )
 
     def open_app(self, uri):
-        """Open app with given uri."""
-        if self._state == STATE_OFF:
-            return
         self._braviarc.start_app(uri)
 
     def list_apps(self):
