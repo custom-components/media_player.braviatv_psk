@@ -1,0 +1,38 @@
+{
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "enable_cookies": "Enable cookies",
+                    "pin": "Pin"
+                }
+            }
+        }
+    },
+    "config": {
+        "step": {
+            "main": {
+                "data": {
+                    "name": "Name",
+                    "host": "Host",
+                    "mac": "Mac",
+                    "psk": "PSK",
+                    "android":"Android",
+                    "enable_cookies": "Enable cookies",
+                    "sourcefilter": "Source filter",
+                    "time_format": "Time format",
+                    "user_labels": "User labels",
+                    "enable_cookies": "Enable cookies",
+                    "use_cec_titles": "Use CEC titles",
+                    "use_cec_uris": "Use CEC URIs",
+                    "amp": "Amp"
+                }
+            }, 
+            "cookie": {
+                "data": {
+                    "pin": "Pin"
+                }
+            }
+        }
+    }
+}
