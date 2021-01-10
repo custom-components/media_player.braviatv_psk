@@ -1,12 +1,10 @@
 {% if installed %}
 **Thanks for using this custom component.**
 
-Version 0.3.3/0.3.4 contains some really nice features:
-
-- A service is added to Home Assistant to send commands to your TV like ChannelUp, Return or Up. This can be used to create a virtual remote or for your automations. Thanks @rchl
-- For Android TVs a service is added to open apps on your TV like Kodi or Youtube. The apps must be opened via using the uri of that app. Check the Github page of this component for examples. Thanks @rchl
-- It's now possible to show the HDMI labels you have set on the TV. This means instead of e.g. HDMI2 you can show Sky Q here. Thanks @RogerSelwyn
-- Home Assistant >= 0.110 is supported by renaming MediaPlayerDevice in the code to MediaPlayerEntity. This is backwards compatible so HA versions < 0.110 are also supported. Thanks @mories76
+What’s Changed in v0.3.6
+- Check if TV is actually on before turning off (#40) @gerard33
+- Add check for Android in services (#46) @gerard33
+Thanks @rchl for reviewing.
 
 <br>
 
@@ -23,7 +21,7 @@ Version 0.3.3/0.3.4 contains some really nice features:
 ![Validate with hassfest](https://github.com/custom-components/media_player.braviatv_psk/workflows/Validate%20with%20hassfest/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-[![maintained](https://img.shields.io/maintenance/yes/2020.svg)](#)
+[![maintained](https://img.shields.io/maintenance/yes/2021.svg)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg)](#)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
