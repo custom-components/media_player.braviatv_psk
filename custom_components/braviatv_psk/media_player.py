@@ -510,6 +510,9 @@ class BraviaTVEntity(MediaPlayerEntity):
 
         Use a different command for Android since IRCC is not working reliable.
         """
+        if self._state == STATE_OFF:
+            return
+
         if self._android:
             self._braviarc.turn_off_command()
         else:
