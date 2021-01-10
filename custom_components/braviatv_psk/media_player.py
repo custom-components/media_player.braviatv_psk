@@ -590,13 +590,13 @@ class BraviaTVEntity(MediaPlayerEntity):
 
     def send_command(self, command_id):
         """Send arbitrary command to TV via HA service."""
-        if self._state == STATE_OFF:
+        if self._state == STATE_OFF and not self._android:
             return
         self._braviarc.send_command(command_id)
 
     def open_app(self, uri):
         """Open app with given uri."""
-        if self._state == STATE_OFF:
+        if self._state == STATE_OFF and not self._android:
             return
         self._braviarc.open_app(uri)
 
