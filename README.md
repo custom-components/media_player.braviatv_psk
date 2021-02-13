@@ -218,6 +218,9 @@ YouTube uri: "com.sony.dtv.com.google.android.youtube.tv.com.google.android.apps
 Music uri: "com.sony.dtv.com.sony.dtv.osat.music.com.sonyericsson.music.MusicActivity"
 Netflix uri: "com.sony.dtv.com.netflix.ninja.com.netflix.ninja.MainActivity"
 Kodi uri: "com.sony.dtv.org.xbmc.kodi.org.xbmc.kodi.Splash"
+Disney+ uri: "com.sony.dtv.com.disney.disneyplus.com.bamtechmedia.dominguez.main.MainActivity"
+NLZiet uri: "com.sony.dtv.nl.nlziet.nl.nlziet.ui.splash.SplashActivity"
+Videoland uri: "com.sony.dtv.nl.rtl.videoland.nl.rtl.videoland.ui.splash.SplashActivity"
 ```
 Working uri's for Sony KD-55XF9005:
 [KD-55XF9005.txt](https://github.com/custom-components/media_player.braviatv_psk/files/4754110/KD-55XF9005.txt)
