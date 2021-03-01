@@ -5,24 +5,25 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
-
   pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
+  hacs:
+    name: HACS Action
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: HACS Action
+        uses: "hacs/action@main"
+        with:
+          category: "integration"
   validate:
     runs-on: "ubuntu-latest"
     name: Validate
     steps:
       - uses: "actions/checkout@v2"
-
-      - name: HACS validation
-        uses: "hacs/integration/action@main"
-        env:
-          SKIP_BRANDS_CHECK: "True"
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CATEGORY: "integration"
-
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
 
@@ -45,7 +46,7 @@ jobs:
       - run: |
           pip3 install isort
           # isort --version
-          isort . --check-only --verbose
+          isort . --check-only --v
 
 #       - run: |
 #           pip3 install yamllint
