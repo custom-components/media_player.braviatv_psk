@@ -19,6 +19,9 @@ jobs:
         uses: "hacs/action@main"
         with:
           category: "integration"
+          ignore:
+            - brands
+            - issues
   validate:
     runs-on: "ubuntu-latest"
     name: Validate
@@ -46,7 +49,7 @@ jobs:
       - run: |
           pip3 install isort
           # isort --version
-          isort . --check-only --v
+          isort . --check-only -v
 
 #       - run: |
 #           pip3 install yamllint
