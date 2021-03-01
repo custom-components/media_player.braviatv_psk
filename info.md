@@ -4,6 +4,7 @@
 What’s Changed in v0.3.7
 - Add version number to manifest.json as required by HA 2021.3
   https://developers.home-assistant.io/docs/creating_integration_manifest/#version
+- Add Disney+, NLziet and Videoland uris (#47), thanks @TFhdKi95ae8L
 
 <br>
 
