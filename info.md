@@ -1,10 +1,9 @@
 {% if installed %}
 **Thanks for using this custom component.**
 
-What’s Changed in v0.3.6
-- Check if TV is actually on before turning off (#40) @gerard33
-- Add check for Android in services (#46) @gerard33
-Thanks @rchl for reviewing.
+What’s Changed in v0.3.7
+- Add version number to manifest.json as required by HA 2021.3
+  https://developers.home-assistant.io/docs/creating_integration_manifest/#version
 
 <br>
 
