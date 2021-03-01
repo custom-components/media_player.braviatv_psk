@@ -16,7 +16,7 @@ jobs:
       - uses: "actions/checkout@v2"
 
       - name: HACS validation
-        uses: "hacs/integration/action@master"
+        uses: "hacs/integration/action@main"
         env:
           SKIP_BRANDS_CHECK: "True"
         with:
@@ -44,8 +44,8 @@ jobs:
 
       - run: |
           pip3 install isort
-          isort --version
-          isort --check-only --verbose
+          # isort --version
+          isort . --check-only --verbose
 
 #       - run: |
 #           pip3 install yamllint
