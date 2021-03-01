@@ -57,7 +57,7 @@ except ImportError:
         MEDIA_TYPE_TVSHOW,
     )
 
-__version__ = "0.3.5"
+__version__ = "0.3.7"
 
 _LOGGER = logging.getLogger(__name__)
 
