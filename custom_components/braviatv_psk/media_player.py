@@ -57,7 +57,7 @@ except ImportError:
         SUPPORT_VOLUME_STEP,
     )
 
-__version__ = "0.3.5"
+__version__ = "0.4.0"
 
 _LOGGER = logging.getLogger(__name__)
 
