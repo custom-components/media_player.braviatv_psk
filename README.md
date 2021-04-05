@@ -14,11 +14,11 @@ A platform which allows you to interact with the Sony Bravia TV using a Pre-Shar
 The media player will show up as Television accessories on devices running iOS 12.2 or later
 
 ### Screenshots
-_Component used with Mini Media Player_
+_Component used with Mini Media Player. Detailled program info only available when using the onboard smartcard module._
 
 ![Component used with Mini Media Player](screenshots/bravia_1.png)
 
-_Component used with standard Media Player_
+_Component used with standard Media Player. Detailled program info only available when using the onboard smartcard module._
 
 ![Component used with standard Media Player](screenshots/bravia_2.png)
 
