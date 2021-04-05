@@ -1,7 +1,7 @@
 {
   "domain": "braviatv_psk",
   "name": "Bravia TV PSK",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "documentation": "https://github.com/custom-components/media_player.braviatv_psk",
   "issue_tracker": "https://github.com/custom-components/media_player.braviatv_psk/issues",
   "requirements": ["pySonyBraviaPSK==0.2.0"],
