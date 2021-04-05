@@ -18,46 +18,46 @@ from homeassistant.const import (
 )
 
 try:
-    from homeassistant.components.media_player import MediaPlayerEntity, PLATFORM_SCHEMA
+    from homeassistant.components.media_player import PLATFORM_SCHEMA, MediaPlayerEntity
 except ImportError:
+    from homeassistant.components.media_player import PLATFORM_SCHEMA
     from homeassistant.components.media_player import (
         MediaPlayerDevice as MediaPlayerEntity,
-        PLATFORM_SCHEMA,
     )
 try:
     from homeassistant.components.media_player.const import (
+        MEDIA_TYPE_TVSHOW,
         SUPPORT_NEXT_TRACK,
         SUPPORT_PAUSE,
-        SUPPORT_PREVIOUS_TRACK,
-        SUPPORT_TURN_ON,
-        SUPPORT_TURN_OFF,
-        SUPPORT_VOLUME_MUTE,
         SUPPORT_PLAY,
         SUPPORT_PLAY_MEDIA,
-        SUPPORT_VOLUME_STEP,
-        SUPPORT_VOLUME_SET,
+        SUPPORT_PREVIOUS_TRACK,
         SUPPORT_SELECT_SOURCE,
         SUPPORT_STOP,
-        MEDIA_TYPE_TVSHOW,
+        SUPPORT_TURN_OFF,
+        SUPPORT_TURN_ON,
+        SUPPORT_VOLUME_MUTE,
+        SUPPORT_VOLUME_SET,
+        SUPPORT_VOLUME_STEP,
     )
 except ImportError:
     from homeassistant.components.media_player import (
+        MEDIA_TYPE_TVSHOW,
         SUPPORT_NEXT_TRACK,
         SUPPORT_PAUSE,
-        SUPPORT_PREVIOUS_TRACK,
-        SUPPORT_TURN_ON,
-        SUPPORT_TURN_OFF,
-        SUPPORT_VOLUME_MUTE,
         SUPPORT_PLAY,
         SUPPORT_PLAY_MEDIA,
-        SUPPORT_VOLUME_STEP,
-        SUPPORT_VOLUME_SET,
+        SUPPORT_PREVIOUS_TRACK,
         SUPPORT_SELECT_SOURCE,
         SUPPORT_STOP,
-        MEDIA_TYPE_TVSHOW,
+        SUPPORT_TURN_OFF,
+        SUPPORT_TURN_ON,
+        SUPPORT_VOLUME_MUTE,
+        SUPPORT_VOLUME_SET,
+        SUPPORT_VOLUME_STEP,
     )
 
-__version__ = "0.3.7"
+__version__ = "0.4.0"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -192,7 +192,7 @@ def convert_time_format(time_format, time_raw):
     return time_raw
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the Sony Bravia TV platform."""
     host = config.get(CONF_HOST)
     psk = config.get(CONF_PSK)
@@ -208,29 +208,50 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         _LOGGER.error("No TV IP address or Pre-Shared Key found in configuration file")
         return
 
-    device = BraviaTVEntity(
-        host, psk, mac, name, amp, android, source_filter, time_format, user_labels
+    device = await hass.async_add_executor_job(
+        BraviaTVEntity,
+        host,
+        psk,
+        mac,
+        name,
+        amp,
+        android,
+        source_filter,
+        time_format,
+        user_labels,
     )
     add_devices([device])
 
-    def send_command(call):
+    await hass.async_add_executor_job(setup_hass_services, hass, device, android)
+
+
+def setup_hass_services(hass, device, android):
+    """Create the services for bravia TV."""
+
+    async def async_send_command(call):
         """Send command to TV."""
         command_id = call.data.get(ATTR_COMMAND_ID)
-        device.send_command(command_id)
+        await device.async_send_command(command_id)
 
-    def open_app(call):
+    async def async_open_app(call):
         """Open app on TV."""
         uri = call.data.get(ATTR_URI)
-        device.open_app(uri)
+        await device.async_open_app(uri)
 
     hass.services.register(
-        DOMAIN, SERVICE_BRAVIA_COMMAND, send_command, schema=BRAVIA_COMMAND_SCHEMA
+        DOMAIN,
+        SERVICE_BRAVIA_COMMAND,
+        async_send_command,
+        schema=BRAVIA_COMMAND_SCHEMA,
     )
 
     # Only add the open_app service when TV is Android
     if android:
         hass.services.register(
-            DOMAIN, SERVICE_BRAVIA_OPEN_APP, open_app, schema=BRAVIA_OPEN_APP_SCHEMA
+            DOMAIN,
+            SERVICE_BRAVIA_OPEN_APP,
+            async_open_app,
+            schema=BRAVIA_OPEN_APP_SCHEMA,
         )
 
 
@@ -250,7 +271,6 @@ class BraviaTVEntity(MediaPlayerEntity):
         user_labels,
     ):
         """Initialize the Sony Bravia device."""
-
         _LOGGER.info("Setting up Sony Bravia TV")
         from braviapsk import sony_bravia_psk
 
@@ -291,18 +311,22 @@ class BraviaTVEntity(MediaPlayerEntity):
             "Set up Sony Bravia TV with IP: %s, PSK: %s, MAC: %s", host, psk, mac
         )
 
-        self.update()
+        # self.update()
 
-    def update(self):
+    async def async_update(self):
         """Update TV info."""
         try:
-            power_status = self._braviarc.get_power_status()
+            power_status = await self.hass.async_add_executor_job(
+                self._braviarc.get_power_status
+            )
             if power_status == "active":
                 self._state = STATE_ON
-                self._refresh_volume()
-                self._refresh_channels()
-                playing_info = self._braviarc.get_playing_info()
-                self._reset_playing_info()
+                await self._async_refresh_volume()
+                await self._async_refresh_channels()
+                playing_info = await self.hass.async_add_executor_job(
+                    self._braviarc.get_playing_info
+                )
+                await self._async_reset_playing_info()
                 if playing_info is None or not playing_info:
                     self._program_name = TV_NO_INFO
                 else:
@@ -316,8 +340,10 @@ class BraviaTVEntity(MediaPlayerEntity):
                     self._start_date_time = playing_info.get("startDateTime")
                     # Get time info from TV program
                     if self._start_date_time and self._duration:
-                        time_info = self._braviarc.playing_time(
-                            self._start_date_time, self._duration
+                        time_info = await self.hass.async_add_executor_job(
+                            self._braviarc.playing_time,
+                            self._start_date_time,
+                            self._duration,
                         )
                         self._start_time = time_info.get("start_time")
                         self._end_time = time_info.get("end_time")
@@ -336,7 +362,7 @@ class BraviaTVEntity(MediaPlayerEntity):
             )
             self._state = STATE_OFF
 
-    def _reset_playing_info(self):
+    async def _async_reset_playing_info(self):
         self._program_name = None
         self._channel_name = None
         self._program_media_type = None
@@ -348,18 +374,22 @@ class BraviaTVEntity(MediaPlayerEntity):
         self._start_time = None
         self._end_time = None
 
-    def _refresh_volume(self):
+    async def _async_refresh_volume(self):
         """Refresh volume information."""
-        volume_info = self._braviarc.get_volume_info()
+        volume_info = await self.hass.async_add_executor_job(
+            self._braviarc.get_volume_info
+        )
         if volume_info is not None:
             self._volume = volume_info.get("volume")
             self._min_volume = volume_info.get("minVolume")
             self._max_volume = volume_info.get("maxVolume")
             self._muted = volume_info.get("mute")
 
-    def _refresh_channels(self):
+    async def _async_refresh_channels(self):
         if not self._source_list:
-            self._content_mapping = self._braviarc.load_source_list()
+            self._content_mapping = await self.hass.async_add_executor_job(
+                self._braviarc.load_source_list
+            )
             self._source_list = []
             if not self._source_filter:  # list is empty
                 for key in self._content_mapping:
@@ -376,7 +406,9 @@ class BraviaTVEntity(MediaPlayerEntity):
                     self._source_list.append(key)
 
         if not self._label_list:
-            self._label_list = self._braviarc.get_current_external_input_status()
+            self._label_list = await self.hass.async_add_executor_job(
+                self._braviarc.get_current_external_input_status
+            )
             if self._label_list:
                 for key in self._source_list:
                     label = self._convert_title_to_label(key)
@@ -485,27 +517,27 @@ class BraviaTVEntity(MediaPlayerEntity):
         """Return the device class of the media player."""
         return self._device_class
 
-    def set_volume_level(self, volume):
+    async def async_set_volume_level(self, volume):
         """Set volume level, range 0..1."""
-        self._braviarc.set_volume_level(volume)
+        await self.hass.async_add_executor_job(self._braviarc.set_volume_level, volume)
 
-    def turn_on(self):
+    async def async_turn_on(self):
         """Turn the media player on.
 
         Use a different command for Android as WOL is not working.
         """
         if self._android:
-            self._braviarc.turn_on_command()
+            await self.hass.async_add_executor_job(self._braviarc.turn_on_command)
         else:
-            self._braviarc.turn_on()
+            await self.hass.async_add_executor_job(self._braviarc.turn_on)
 
         # Show that TV is starting while it takes time
         # before program info is available
-        self._reset_playing_info()
+        await self._async_reset_playing_info()
         self._state = STATE_ON
         self._program_name = TV_WAIT
 
-    def turn_off(self):
+    async def async_turn_off(self):
         """Turn the media player off.
 
         Use a different command for Android since IRCC is not working reliable.
@@ -514,94 +546,100 @@ class BraviaTVEntity(MediaPlayerEntity):
             return
 
         if self._android:
-            self._braviarc.turn_off_command()
+            await self.hass.async_add_executor_job(self._braviarc.turn_off_command)
         else:
-            self._braviarc.turn_off()
+            await self.hass.async_add_executor_job(self._braviarc.turn_off)
 
         self._state = STATE_OFF
 
-    def volume_up(self):
+    async def async_volume_up(self):
         """Volume up the media player."""
-        self._braviarc.volume_up()
+        await self.hass.async_add_executor_job(self._braviarc.volume_up)
 
-    def volume_down(self):
+    async def async_volume_down(self):
         """Volume down media player."""
-        self._braviarc.volume_down()
+        await self.hass.async_add_executor_job(self._braviarc.volume_down)
 
-    def mute_volume(self, mute):
+    async def async_mute_volume(self, mute):
         """Send mute command."""
-        self._braviarc.mute_volume()
+        await self.hass.async_add_executor_job(self._braviarc.mute_volume)
 
-    def select_source(self, source):
+    async def async_select_source(self, source):
         """Set the input source."""
         title = self._convert_label_to_title(source)
         if title in self._content_mapping:
             uri = self._content_mapping[title]
-            self._braviarc.play_content(uri)
+            await self.hass.async_add_executor_job(self._braviarc.play_content, uri)
 
-    def media_play_pause(self):
+    async def async_media_play_pause(self):
         """Simulate play pause media player."""
         if self._playing:
-            self.media_pause()
+            await self.async_media_pause()
         else:
-            self.media_play()
+            await self.async_media_play()
 
-    def media_play(self):
+    async def async_media_play(self):
         """Send play command."""
         self._playing = True
-        self._braviarc.media_play()
+        await self.hass.async_add_executor_job(self._braviarc.media_play)
 
-    def media_pause(self):
+    async def async_media_pause(self):
         """Send media pause command to media player.
 
         Will pause TV when TV tuner is on.
         """
         self._playing = False
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.media_tvpause()
+            await self.hass.async_add_executor_job(self._braviarc.media_tvpause)
         else:
-            self._braviarc.media_pause()
+            await self.hass.async_add_executor_job(self._braviarc.media_pause)
 
-    def media_next_track(self):
+    async def async_media_next_track(self):
         """Send next track command.
 
         Will switch to next channel when TV tuner is on.
         """
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.send_command("ChannelUp")
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, "ChannelUp"
+            )
         else:
-            self._braviarc.media_next_track()
+            await self.hass.async_add_executor_job(self._braviarc.media_next_track)
 
-    def media_previous_track(self):
+    async def async_media_previous_track(self):
         """Send the previous track command.
 
         Will switch to previous channel when TV tuner is on.
         """
         if self._program_media_type == "tv" or self._program_name is not None:
-            self._braviarc.send_command("ChannelDown")
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, "ChannelDown"
+            )
         else:
-            self._braviarc.media_previous_track()
+            await self.hass.async_add_executor_job(self._braviarc.media_previous_track)
 
-    def play_media(self, media_type, media_id, **kwargs):
+    async def async_play_media(self, media_type, media_id, **kwargs):
         """Play media."""
         _LOGGER.debug("Play media: %s (%s)", media_id, media_type)
 
         if media_id in PLAY_MEDIA_OPTIONS:
-            self._braviarc.send_command(media_id)
+            await self.hass.async_add_executor_job(
+                self._braviarc.send_command, media_id
+            )
         else:
             _LOGGER.warning("Unsupported media_id: %s", media_id)
 
-    def send_command(self, command_id):
+    async def async_send_command(self, command_id):
         """Send arbitrary command to TV via HA service."""
         if self._state == STATE_OFF and not self._android:
             return
-        self._braviarc.send_command(command_id)
+        await self.hass.async_add_executor_job(self._braviarc.send_command, command_id)
 
-    def open_app(self, uri):
+    async def async_open_app(self, uri):
         """Open app with given uri."""
         if self._state == STATE_OFF and not self._android:
             return
-        self._braviarc.open_app(uri)
+        await self.hass.async_add_executor_job(self._braviarc.open_app, uri)
 
     def _convert_title_to_label(self, title):
         return_value = title
