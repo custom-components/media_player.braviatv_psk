@@ -1,8 +1,8 @@
 {% if installed %}
 **Thanks for using this custom component.**
 
-What’s Changed in v0.4.0
-- Update to work as an async Integration (#48), thanks @RogerSelwyn
+What’s Changed in v0.4.1
+- Add IOT class to manifest.json
 
 <br>
 
