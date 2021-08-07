@@ -1,0 +1,46 @@
+{
+"result": [
+[{
+"title": "Play Store",
+"uri": "com.sony.dtv.com.android.vending.com.google.android.finsky.tvmainactivity.TvMainActivity",
+"icon": "http://192.168.1.8/DIAL/icon/com.sony.dtv.com.android.vending.com.google.android.finsky.tvmainactivity.TvMainActivity.png"
+}, {
+"title": "YouTube",
+"uri": "com.sony.dtv.com.google.android.youtube.tv.com.google.android.apps.youtube.tv.activity.ShellActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.google.android.youtube.tv.com.google.android.apps.youtube.tv.activity.ShellActivity.png"
+}, {
+"title": "Music",
+"uri": "com.sony.dtv.com.sony.dtv.osat.music.com.sonyericsson.music.MusicActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.sony.dtv.osat.music.com.sonyericsson.music.MusicActivity.png"
+}, {
+"title": "TV",
+"uri": "com.sony.dtv.com.sony.dtv.tvx.com.sony.dtv.tvx.MainActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.sony.dtv.tvx.com.sony.dtv.tvx.MainActivity.png"
+}, {
+"title": "Netflix",
+"uri": "com.sony.dtv.com.netflix.ninja.com.netflix.ninja.MainActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.netflix.ninja.com.netflix.ninja.MainActivity.png"
+}, {
+"title": "TV Control Setup with Amazon Alexa",
+"uri": "com.sony.dtv.com.sony.dtv.smarthomesettings.com.sony.dtv.smarthomesettings.activity.MainActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.sony.dtv.smarthomesettings.com.sony.dtv.smarthomesettings.activity.MainActivity.png"
+}, {
+"title": "Sony Select",
+"uri": "com.sony.dtv.com.sony.dtv.sonyselect.com.sony.dtv.sonyselect.activities.LaunchActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.sony.dtv.sonyselect.com.sony.dtv.sonyselect.activities.LaunchActivity.png"
+}, {
+"title": "Timers",
+"uri": "com.sony.dtv.com.sony.dtv.timers.com.sony.dtv.activity.TimersMainActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.sony.dtv.timers.com.sony.dtv.activity.TimersMainActivity.png"
+}, {
+"title": "Internet Browser",
+"uri": "com.sony.dtv.com.vewd.core.integration.dia.com.vewd.core.integration.dia.SonyBrowserUiActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.com.vewd.core.integration.dia.com.vewd.core.integration.dia.SonyBrowserUiActivity.png"
+}, {
+"title": "VLC",
+"uri": "com.sony.dtv.org.videolan.vlc.org.videolan.vlc.StartActivity",
+"icon": "http://192.168.1.100/DIAL/icon/com.sony.dtv.org.videolan.vlc.org.videolan.vlc.StartActivity.png"
+}]
+],
+"id": 1
+}
