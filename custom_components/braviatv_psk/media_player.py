@@ -174,6 +174,8 @@ BRAVIA_OPEN_APP_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTITY_ID): cv.entity_id, vol.Required(ATTR_URI): cv.string}
 )
 
+registered_devices = []
+
 # pylint: disable=unused-argument
 
 
@@ -190,6 +192,14 @@ def convert_time_format(time_format, time_raw):
             hours = 12
         return "{}:{:02d} {}".format(hours, minutes, setting)
     return time_raw
+
+
+def lookup_registered_device(entity_id):
+    """Lookup registered Bravia device by entity_id."""
+    for device in registered_devices:
+        if device.entity_id == entity_id:
+            return device
+    return None
 
 
 async def async_setup_platform(hass, config, add_devices, discovery_info=None):
@@ -221,22 +231,33 @@ async def async_setup_platform(hass, config, add_devices, discovery_info=None):
         user_labels,
     )
     add_devices([device])
+    registered_devices.append(device)
 
-    await hass.async_add_executor_job(setup_hass_services, hass, device, android)
+    await hass.async_add_executor_job(setup_hass_services, hass, android)
 
 
-def setup_hass_services(hass, device, android):
+def setup_hass_services(hass, android):
     """Create the services for bravia TV."""
 
     async def async_send_command(call):
         """Send command to TV."""
         command_id = call.data.get(ATTR_COMMAND_ID)
-        await device.async_send_command(command_id)
+        entity_id = call.data.get(ATTR_ENTITY_ID)
+        device = lookup_registered_device(entity_id)
+        if device:
+            await device.async_send_command(command_id)
+        else:
+            _LOGGER.warning('No registered Bravia TV with entity_id: %s', entity_id)
 
     async def async_open_app(call):
         """Open app on TV."""
         uri = call.data.get(ATTR_URI)
-        await device.async_open_app(uri)
+        entity_id = call.data.get(ATTR_ENTITY_ID)
+        device = lookup_registered_device(entity_id)
+        if device:
+            await device.async_open_app(uri)
+        else:
+            _LOGGER.warning('No registered Bravia TV with entity_id: %s', entity_id)
 
     hass.services.register(
         DOMAIN,
