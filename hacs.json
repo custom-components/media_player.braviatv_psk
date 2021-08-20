@@ -1,5 +1,8 @@
 {
   "name": "Bravia TV PSK",
+  "zip_release": true,
+  "filename": "combined.zip",
+  "hide_default_branch": true,
   "domains": ["media_player"],
   "iot_class": "Local Polling"
 }
