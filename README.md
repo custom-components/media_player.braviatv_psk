@@ -64,7 +64,7 @@ key | required | value | description
 ### Installation instructions TV
 1. Enable remote start on your TV: [Settings] => [Network] => [Home Network Setup] => [Remote Start] => [On]
 2. Enable pre-shared key on your TV: [Settings] => [Network] => [Home Network Setup] => [IP Control] => [Authentication] => [Normal and Pre-Shared Key]
-3. Set pre-shared key on your TV: [Settings] => [Network] => [Home Network Setup] => [IP Control] => [Pre-Shared Key] => sony
+3. Set pre-shared key on your TV: [Settings] => [Network] => [Home Network Setup] => [IP Control] => [Pre-Shared Key] => `sony`
 4. Give your TV a static IP address, or make a DHCP reservation for a specific IP address in your router
 5. Determine the MAC address of your TV: [Settings] => [Network] => [Network Setup] => [View Network Status]
 
