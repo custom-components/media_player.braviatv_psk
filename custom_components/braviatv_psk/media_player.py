@@ -340,10 +340,11 @@ class BraviaTVEntity(MediaPlayerEntity):
             power_status = await self.hass.async_add_executor_job(
                 self._braviarc.get_power_status
             )
+            if power_status in ["active", "standby"]:
+                await self._async_refresh_channels()
             if power_status == "active":
                 self._state = STATE_ON
                 await self._async_refresh_volume()
-                await self._async_refresh_channels()
                 playing_info = await self.hass.async_add_executor_job(
                     self._braviarc.get_playing_info
                 )
