@@ -1,8 +1,9 @@
 {% if installed %}
 **Thanks for using this custom component.**
 
-What’s Changed in v0.4.1
-- Add IOT class to manifest.json
+What’s Changed in v0.4.2
+- Suppress unnecessary errors - [23](https://github.com/gerard33/sony_bravia_psk/pull/23) - @RogerSelwyn
+- Enable Refresh Channels to be done during standby as well as active - [68](https://github.com/custom-components/media_player.braviatv_psk/pull/68) - @RogerSelwyn
 
 <br>
 
