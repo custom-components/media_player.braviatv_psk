@@ -4,7 +4,7 @@
 
 [![maintained](https://img.shields.io/maintenance/yes/2022.svg)](#)
 [![maintainer](https://img.shields.io/badge/maintainer-%20%40gerard33-blue.svg)](#)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
 
 ## Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
