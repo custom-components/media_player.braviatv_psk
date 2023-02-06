@@ -4,6 +4,10 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg)](https://community.home-assistant.io/t/sony-bravia-tv-component-with-pre-shared-key/30698?u=gerard33)
 
+### This component is no longer maintained as I switched to the HA Sony Bravia [integration](https://www.home-assistant.io/integrations/braviatv/) which now also supports using the Pre-Shared Key. I can still merge PRs made and tested by the community and release new versions.
+A huge thanks to all users and contributors :thumbsup:  
+It was really fun to develop this custom integration and see that so many people use(d) it :tv:
+
 ## Custom component for Sony Bravia TV using Pre-Shared Key (PSK)
 A platform which allows you to interact with the Sony Bravia TV using a Pre-Shared Key.
 
