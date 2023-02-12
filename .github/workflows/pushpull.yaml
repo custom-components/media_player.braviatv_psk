@@ -19,7 +19,7 @@ jobs:
         uses: "hacs/action@main"
         with:
           category: "integration"
-          ignore: brands
+          ignore: brands issues
   validate:
     runs-on: "ubuntu-latest"
     name: Validate
