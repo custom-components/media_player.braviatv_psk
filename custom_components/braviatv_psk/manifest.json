@@ -1,11 +1,11 @@
 {
   "domain": "braviatv_psk",
   "name": "Bravia TV PSK",
-  "version": "0.0.0",
+  "codeowners": ["@gerard33"],
+  "dependencies": [],
   "documentation": "https://github.com/custom-components/media_player.braviatv_psk",
+  "iot_class": "local_polling",
   "issue_tracker": "https://github.com/custom-components/media_player.braviatv_psk/issues",
   "requirements": ["pySonyBraviaPSK==0.2.4"],
-  "dependencies": [],
-  "codeowners": ["@gerard33"],
-  "iot_class": "local_polling"
+  "version": "0.0.0"
 }
